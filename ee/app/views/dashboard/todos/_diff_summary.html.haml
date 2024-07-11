@@ -1,0 +1,7 @@
+- todo = local_assigns.fetch(:todo)
+
+- if todo.review_requested?
+  - merge_request = todo.target
+  - diff_llm_summary = diff_llm_summary(merge_request)
+  - if summarize_llm_enabled?(merge_request.project, current_user) && diff_llm_summary.present?
+    = render 'llm_summary', local_assigns: { content: truncated_diff_llm_summary(merge_request) }

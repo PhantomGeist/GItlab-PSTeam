@@ -1,0 +1,76 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`MergeRequestTable component matches the snapshot 1`] = `
+<div
+  class="mr-table"
+>
+  <div
+    class="card"
+  >
+    <div
+      class="border-bottom-0 card-header"
+    >
+      <div
+        class="d-flex gl-responsive-table-row py-0 table-row-header"
+        role="row"
+      >
+        <div
+          class="d-md-flex d-none section-50 table-section"
+          role="rowheader"
+        >
+          Title
+        </div>
+        <div
+          class="section-50 table-section"
+          role="rowheader"
+        >
+          <div
+            class="d-flex"
+          >
+            <span
+              class="d-md-flex d-none metric-col"
+            >
+              Time to merge
+            </span>
+            <gl-collapsible-listbox-stub
+              block="true"
+              category="primary"
+              class="metric-col"
+              fluidwidth="true"
+              headertext=""
+              icon=""
+              ischeckcentered="true"
+              items="[object Object],[object Object],[object Object]"
+              noresultstext="No results found"
+              placement="right"
+              positioningstrategy="absolute"
+              resetbuttonlabel=""
+              searchplaceholder="Search"
+              selected="time_to_last_commit"
+              showselectallbuttonlabel=""
+              size="medium"
+              toggleclass="dropdown-menu-toggle gl-w-full!"
+              toggletext="Time from first comment to last commit"
+              variant="default"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      class="card-body py-0"
+    >
+      <merge-request-table-row-stub
+        mergerequest="[object Object]"
+        metriclabel="Time from first comment to last commit"
+        metrictype="time_to_last_commit"
+      />
+      <merge-request-table-row-stub
+        mergerequest="[object Object]"
+        metriclabel="Time from first comment to last commit"
+        metrictype="time_to_last_commit"
+      />
+    </div>
+  </div>
+</div>
+`;

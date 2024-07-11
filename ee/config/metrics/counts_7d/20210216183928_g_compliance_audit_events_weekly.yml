@@ -1,0 +1,23 @@
+---
+data_category: optional
+key_path: redis_hll_counters.compliance.g_compliance_audit_events_weekly
+description: Number of unique visitors to group-level audit events screen in a given
+  week
+product_section: sec
+product_stage: govern
+product_group: compliance
+value_type: number
+status: active
+time_frame: 7d
+data_source: redis_hll
+instrumentation_class: RedisHLLMetric
+options:
+  events:
+  - g_compliance_audit_events
+distribution:
+- ee
+tier:
+- premium
+- ultimate
+performance_indicator_type: []
+milestone: "<13.9"

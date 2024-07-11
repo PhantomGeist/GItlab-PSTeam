@@ -1,0 +1,423 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`License Compliance extension expanded data with new licenses displays allowed licenses 1`] = `
+<div
+  class="gl-pl-9 gl-py-3"
+  data-testid="extension-list-item"
+>
+  <div
+    class="gl-w-full"
+  >
+    <div
+      class="gl-w-full"
+    >
+      <div
+        class="gl-mb-2"
+      >
+        <strong>
+          Allowed
+        </strong>
+      </div>
+      <div
+        class="gl-display-flex"
+      >
+        <div
+          class="gl-w-full"
+        >
+          <div
+            class="gl-display-flex gl-flex-nowrap"
+          >
+            <div
+              class="gl-display-flex gl-flex-wrap gl-w-full"
+            >
+              <div
+                class="gl-align-items-center gl-display-flex"
+              >
+                <p
+                  class="gl-m-0"
+                >
+                  Acceptable for use in this project
+                </p>
+              </div>
+            </div>
+            <div
+              class="gl-align-items-flex-start gl-display-flex gl-ml-auto gl-pl-3"
+            />
+          </div>
+        </div>
+      </div>
+      <ul
+        class="gl-list-style-none gl-m-0 gl-p-0"
+      >
+        <li>
+          <div
+            class="gl-pl-6 gl-w-full"
+            data-testid="child-content"
+          >
+            <div
+              class="gl-display-flex"
+            >
+              <div
+                class="gl-display-flex report-block-child-icon"
+              >
+                <div
+                  class="gl-m-auto gl-mr-3 gl-p-2 gl-text-green-500"
+                >
+                  <div
+                    class="gl-display-flex gl-relative gl-rounded-full"
+                  >
+                    <div
+                      class="gl-absolute gl-display-flex gl-left-50p gl-m-auto gl-top-half gl-translate-x-n50"
+                    >
+                      <div
+                        class="gl-display-flex gl-m-auto gl-translate-y-n50"
+                      >
+                        <svg
+                          aria-label="Success "
+                          class="gl-display-block gl-icon s12"
+                          data-qa-selector="status_success_icon"
+                          data-testid="status-success-icon"
+                          role="img"
+                        >
+                          <use
+                            href="file-mock#status-success"
+                          />
+                        </svg>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div
+                class="gl-w-full"
+              >
+                <div
+                  class="gl-display-flex gl-flex-nowrap"
+                >
+                  <div
+                    class="gl-display-flex gl-flex-wrap gl-w-full"
+                  >
+                    <div
+                      class="gl-align-items-center gl-display-flex"
+                    >
+                      <p
+                        class="gl-m-0"
+                      />
+                    </div>
+                    <div
+                      class="gl-pr-2"
+                    >
+                      <a
+                        class="gl-link"
+                        href="https://opensource.org/licenses/ISC"
+                      >
+                        ISC License
+                      </a>
+                    </div>
+                  </div>
+                  <div
+                    class="gl-align-items-flex-start gl-display-flex gl-ml-auto gl-pl-3"
+                  >
+                    <span>
+                      <a
+                        class="btn btn-confirm btn-confirm-tertiary btn-sm gl-button gl-float-left gl-md-display-block"
+                        data-testid="extension-actions-button"
+                        href="/group-name/project-name/-/merge_requests/78/full_report"
+                      >
+                        <span
+                          class="gl-button-text"
+                        >
+                          Used by 2 packages
+                        </span>
+                      </a>
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`License Compliance extension expanded data with new licenses displays denied licenses 1`] = `
+<div
+  class="gl-border-b-1 gl-border-b-solid gl-border-gray-100 gl-pl-9 gl-py-3"
+  data-testid="extension-list-item"
+>
+  <div
+    class="gl-w-full"
+  >
+    <div
+      class="gl-w-full"
+    >
+      <div
+        class="gl-mb-2"
+      >
+        <strong>
+          Denied
+        </strong>
+      </div>
+      <div
+        class="gl-display-flex"
+      >
+        <div
+          class="gl-w-full"
+        >
+          <div
+            class="gl-display-flex gl-flex-nowrap"
+          >
+            <div
+              class="gl-display-flex gl-flex-wrap gl-w-full"
+            >
+              <div
+                class="gl-align-items-center gl-display-flex"
+              >
+                <p
+                  class="gl-m-0"
+                >
+                  Out-of-compliance with the project's policies and should be removed
+                </p>
+              </div>
+            </div>
+            <div
+              class="gl-align-items-flex-start gl-display-flex gl-ml-auto gl-pl-3"
+            />
+          </div>
+        </div>
+      </div>
+      <ul
+        class="gl-list-style-none gl-m-0 gl-p-0"
+      >
+        <li>
+          <div
+            class="gl-pl-6 gl-w-full"
+            data-testid="child-content"
+          >
+            <div
+              class="gl-display-flex"
+            >
+              <div
+                class="gl-display-flex report-block-child-icon"
+              >
+                <div
+                  class="gl-m-auto gl-mr-3 gl-p-2 gl-text-red-500"
+                >
+                  <div
+                    class="gl-display-flex gl-relative gl-rounded-full"
+                  >
+                    <div
+                      class="gl-absolute gl-display-flex gl-left-50p gl-m-auto gl-top-half gl-translate-x-n50"
+                    >
+                      <div
+                        class="gl-display-flex gl-m-auto gl-translate-y-n50"
+                      >
+                        <svg
+                          aria-label="Failed "
+                          class="gl-display-block gl-icon s12"
+                          data-qa-selector="status_failed_icon"
+                          data-testid="status-failed-icon"
+                          role="img"
+                        >
+                          <use
+                            href="file-mock#status-failed"
+                          />
+                        </svg>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div
+                class="gl-w-full"
+              >
+                <div
+                  class="gl-display-flex gl-flex-nowrap"
+                >
+                  <div
+                    class="gl-display-flex gl-flex-wrap gl-w-full"
+                  >
+                    <div
+                      class="gl-align-items-center gl-display-flex"
+                    >
+                      <p
+                        class="gl-m-0"
+                      />
+                    </div>
+                    <div
+                      class="gl-pr-2"
+                    >
+                      <a
+                        class="gl-link"
+                        href="https://opensource.org/licenses/Apache-2.0"
+                      >
+                        Apache License 2.0
+                      </a>
+                    </div>
+                    <div>
+                      <p
+                        class="gl-m-0"
+                      >
+                        Used by websocket-driver, websocket-extensions, xml-name-validator
+                      </p>
+                    </div>
+                  </div>
+                  <div
+                    class="gl-align-items-flex-start gl-display-flex gl-ml-auto gl-pl-3"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`License Compliance extension expanded data with new licenses displays uncategorized licenses 1`] = `
+<div
+  class="gl-border-b-1 gl-border-b-solid gl-border-gray-100 gl-pl-9 gl-py-3"
+  data-testid="extension-list-item"
+>
+  <div
+    class="gl-w-full"
+  >
+    <div
+      class="gl-w-full"
+    >
+      <div
+        class="gl-mb-2"
+      >
+        <strong>
+          Uncategorized
+        </strong>
+      </div>
+      <div
+        class="gl-display-flex"
+      >
+        <div
+          class="gl-w-full"
+        >
+          <div
+            class="gl-display-flex gl-flex-nowrap"
+          >
+            <div
+              class="gl-display-flex gl-flex-wrap gl-w-full"
+            >
+              <div
+                class="gl-align-items-center gl-display-flex"
+              >
+                <p
+                  class="gl-m-0"
+                >
+                  No policy matches this license
+                </p>
+              </div>
+            </div>
+            <div
+              class="gl-align-items-flex-start gl-display-flex gl-ml-auto gl-pl-3"
+            />
+          </div>
+        </div>
+      </div>
+      <ul
+        class="gl-list-style-none gl-m-0 gl-p-0"
+      >
+        <li>
+          <div
+            class="gl-pl-6 gl-w-full"
+            data-testid="child-content"
+          >
+            <div
+              class="gl-display-flex"
+            >
+              <div
+                class="gl-display-flex report-block-child-icon"
+              >
+                <div
+                  class="gl-m-auto gl-mr-3 gl-p-2 gl-text-gray-500"
+                >
+                  <div
+                    class="gl-display-flex gl-relative gl-rounded-full"
+                  >
+                    <div
+                      class="gl-absolute gl-display-flex gl-left-50p gl-m-auto gl-top-half gl-translate-x-n50"
+                    >
+                      <div
+                        class="gl-display-flex gl-m-auto gl-translate-y-n50"
+                      >
+                        <svg
+                          aria-label="Notice "
+                          class="gl-display-block gl-icon s12"
+                          data-qa-selector="status_notice_icon"
+                          data-testid="status-alert-icon"
+                          role="img"
+                        >
+                          <use
+                            href="file-mock#status-alert"
+                          />
+                        </svg>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div
+                class="gl-w-full"
+              >
+                <div
+                  class="gl-display-flex gl-flex-nowrap"
+                >
+                  <div
+                    class="gl-display-flex gl-flex-wrap gl-w-full"
+                  >
+                    <div
+                      class="gl-align-items-center gl-display-flex"
+                    >
+                      <p
+                        class="gl-m-0"
+                      />
+                    </div>
+                    <div
+                      class="gl-pr-2"
+                    >
+                      <a
+                        class="gl-link"
+                        href="http://opensource.linux-mirror.org/licenses/afl-2.1.txt"
+                      >
+                        Academic Free License v2.1
+                      </a>
+                    </div>
+                  </div>
+                  <div
+                    class="gl-align-items-flex-start gl-display-flex gl-ml-auto gl-pl-3"
+                  >
+                    <span>
+                      <a
+                        class="btn btn-confirm btn-confirm-tertiary btn-sm gl-button gl-float-left gl-md-display-block"
+                        data-testid="extension-actions-button"
+                        href="/group-name/project-name/-/merge_requests/78/full_report"
+                      >
+                        <span
+                          class="gl-button-text"
+                        >
+                          Used by 1 package
+                        </span>
+                      </a>
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
+`;

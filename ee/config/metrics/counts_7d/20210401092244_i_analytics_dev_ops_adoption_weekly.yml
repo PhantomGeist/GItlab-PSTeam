@@ -1,0 +1,26 @@
+---
+data_category: optional
+key_path: redis_hll_counters.analytics.i_analytics_dev_ops_adoption_weekly
+description: Counts visits to DevOps Adoption page per week
+product_section: dev
+product_stage: manage
+product_group: optimize
+value_type: number
+status: active
+milestone: '13.11'
+introduced_by_url: https://gitlab.com/gitlab-org/gitlab/-/merge_requests/57104
+time_frame: 7d
+data_source: internal_events
+instrumentation_class: RedisHLLMetric
+options:
+  events:
+    - i_analytics_dev_ops_adoption
+events:
+  - name: i_analytics_dev_ops_adoption
+    unique: user.id
+distribution:
+- ee
+tier:
+- premium
+- ultimate
+performance_indicator_type: []

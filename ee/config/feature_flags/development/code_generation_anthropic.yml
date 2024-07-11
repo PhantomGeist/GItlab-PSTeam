@@ -1,0 +1,8 @@
+---
+name: code_generation_anthropic
+introduced_by_url: https://gitlab.com/gitlab-org/gitlab/-/merge_requests/132735
+rollout_issue_url: https://gitlab.com/gitlab-org/gitlab/-/issues/426506
+milestone: '16.5'
+type: development
+group: group::code creation
+default_enabled: false

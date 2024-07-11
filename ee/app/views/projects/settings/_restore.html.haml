@@ -1,0 +1,16 @@
+- return unless @project.marked_for_deletion?
+- return unless project.feature_available?(:adjourned_deletion_for_projects_and_groups)
+
+- date = permanent_deletion_date(project.marked_for_deletion_at)
+- title = _('This project will be deleted on %{date}') %{ date: date }
+
+= render Pajamas::AlertComponent.new(variant: :warning,
+  title: title,
+  alert_options: { class: "gl-mb-7"}) do |c|
+  - c.with_body do
+    = _("Restoring the project will prevent the project from being removed on this date and restore people's ability to make changes to it.")
+    = _("The repository can be committed to, and issues, comments and other entities can be created.")
+    = _('Only active projects show up in the search and on the dashboard.')
+  - c.with_actions do
+    = render Pajamas::ButtonComponent.new(href: namespace_project_restore_path(project.namespace, project), method: :post, variant: :confirm) do
+      = _('Restore project')

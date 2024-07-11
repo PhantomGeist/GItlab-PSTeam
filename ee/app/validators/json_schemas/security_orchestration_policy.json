@@ -1,0 +1,865 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "GitLab Security Policies Configuration",
+  "description": "Policies in GitLab provide security teams a way to require scans of their choice to be run whenever a project pipeline runs according to the configuration specified. It is configured by supplying a file in `.gitlab/security-policies/policy.yml`, which will list applicable security policies. A full list of all options can be found at https://docs.gitlab.com/ee/user/application_security/policies/.",
+  "type": "object",
+  "anyOf": [
+    {
+      "required": [
+        "scan_execution_policy"
+      ]
+    },
+    {
+      "required": [
+        "scan_result_policy"
+      ]
+    }
+  ],
+  "properties": {
+    "scan_execution_policy": {
+      "type": "array",
+      "description": "Declares required security scans to be run on a specified schedule or with the project pipeline.",
+      "additionalItems": false,
+      "items": {
+        "maxItems": 5,
+        "required": [
+          "name",
+          "enabled",
+          "rules",
+          "actions"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "description": "Name for the policy.",
+            "minLength": 1,
+            "maxLength": 255,
+            "type": "string"
+          },
+          "description": {
+            "description": "Specifies the longer description of the policy.",
+            "type": "string"
+          },
+          "policy_scope": {
+            "type": "object",
+            "properties": {
+              "compliance_frameworks": {
+                "description": "Specifies for which compliance frameworks this policy should be applied to.",
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "integer"
+                    }
+                  }
+                }
+              },
+              "projects": {
+                "type": "object",
+                "description": "Specifies for which projects this policy should be applied to.",
+                "properties": {
+                  "including": {
+                    "type": "array",
+                    "description": "Specifies projects where this policy should be applied to.",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "integer",
+                          "description": "Specifies the ID of the project."
+                        }
+                      }
+                    }
+                  },
+                  "excluding": {
+                    "type": "array",
+                    "description": "Specifies projects where this policy should not be applied to.",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "integer",
+                          "description": "Specifies the ID of the project."
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "enabled": {
+            "description": "Whether to enforce this policy or not.",
+            "type": "boolean"
+          },
+          "rules": {
+            "description": "Specifies conditions when this policy should be applied.",
+            "type": "array",
+            "additionalItems": false,
+            "items": {
+              "type": "object",
+              "oneOf": [
+                {
+                  "required": [
+                    "branches"
+                  ]
+                },
+                {
+                  "required": [
+                    "branch_type"
+                  ]
+                },
+                {
+                  "required": [
+                    "agents"
+                  ]
+                }
+              ],
+              "required": [
+                "type"
+              ],
+              "properties": {
+                "type": {
+                  "description": "Specifies when this policy should be enforced. `pipeline` indicates that given policy should be enforced for the pipeline started for the branch matching one of the defined in `branches` field. `schedule` indicates that given policy should execute defined `actions` on specified `cadence`.",
+                  "enum": [
+                    "pipeline",
+                    "schedule"
+                  ],
+                  "type": "string"
+                },
+                "branches": {
+                  "type": "array",
+                  "additionalItems": false,
+                  "description": "Used to specify a list of branches that should enforce this policy. Supports wildcard (ie. `*` or `release-*`). Supported only when `type` is set to `pipeline`.",
+                  "items": {
+                    "minLength": 1,
+                    "type": "string"
+                  }
+                },
+                "branch_type": {
+                  "type": "string",
+                  "description": "Which types of branches to scan.",
+                  "enum": [
+                    "default",
+                    "protected",
+                    "all"
+                  ]
+                },
+                "branch_exceptions": {
+                  "type": "array",
+                  "minItems": 1,
+                  "uniqueItems": true,
+                  "items": {
+                    "oneOf": [
+                      {
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "name": {
+                            "type": "string",
+                            "minLength": 1
+                          },
+                          "full_path": {
+                            "type": "string",
+                            "minLength": 1
+                          }
+                        },
+                        "required": [
+                          "name",
+                          "full_path"
+                        ]
+                      }
+                    ]
+                  }
+                },
+                "cadence": {
+                  "description": "Specifies when this policy should schedule a new pipeline with enforced `actions`. Uses cron expression as a format (ie. `0 22 * * 1-5`). Supported only when `type` is set to `schedule`.",
+                  "type": "string",
+                  "pattern": "(@(yearly|annually|monthly|weekly|daily|midnight|noon|hourly))|(((\\*|(\\-?\\d+\\,?)+)(\\/\\d+)?|last|L|(sun|mon|tue|wed|thu|fri|sat|SUN|MON|TUE|WED|THU|FRI|SAT\\-|\\,)+|(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec|JAN|FEB|MAR|APR|MAY|JUN|JUL|AUG|SEP|OCT|NOV|DEC|\\-|\\,)+)\\s?){5,6}"
+                },
+                "timezone": {
+                  "type": "string",
+                  "description": "Time zone to apply to the cadence. Value must be an IANA Time Zone Database identifier, for example: `America/New_York`."
+                },
+                "agents": {
+                  "type": "object",
+                  "description": "Specifies names of the GitLab agents where cluster image scanning will run.",
+                  "minProperties": 1,
+                  "maxProperties": 1,
+                  "additionalProperties": false,
+                  "patternProperties": {
+                    "^[a-z0-9]([-a-z0-9]*[a-z0-9])?$": {
+                      "type": "object",
+                      "description": "Specifies the name of the Kubernetes cluster configured for your project in GitLab.",
+                      "additionalProperties": false,
+                      "properties": {
+                        "namespaces": {
+                          "type": "array",
+                          "description": "Specifies Kubernetes namespaces where resources will be scanned.",
+                          "items": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "if": {
+                "properties": {
+                  "type": {
+                    "const": "schedule"
+                  }
+                }
+              },
+              "then": {
+                "required": [
+                  "cadence"
+                ]
+              },
+              "additionalProperties": false
+            }
+          },
+          "actions": {
+            "type": "array",
+            "description": "Specifies a list of scans that should be enforced in this policy.",
+            "additionalItems": false,
+            "items": {
+              "type": "object",
+              "properties": {
+                "scan": {
+                  "description": "The type of scan that should be enforced to run. Available: `sast`, `sast_iac`, `dast`, `secret_detection`, `container_scanning`, `dependency_scanning`.",
+                  "enum": [
+                    "dast",
+                    "secret_detection",
+                    "container_scanning",
+                    "cluster_image_scanning",
+                    "sast",
+                    "dependency_scanning",
+                    "sast_iac",
+                    "custom"
+                  ],
+                  "type": "string"
+                },
+                "scanner_profile": {
+                  "description": "A name of the DAST Scanner Profile to be used to execute DAST scan. Supported only when `scan` is set to `dast`.",
+                  "type": "string"
+                },
+                "site_profile": {
+                  "description": "A name of the DAST Site Profile to be used to execute DAST scan. Supported only when `scan` is set to `dast`.",
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "variables": {
+                  "type": "object",
+                  "description": "Defines environment variables for specific security jobs. Job level property overrides global variables.",
+                  "additionalProperties": false,
+                  "patternProperties": {
+                    "^[a-zA-Z_][a-zA-Z0-9_]*$": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "tags": {
+                  "type": "array",
+                  "additionalItems": false,
+                  "description": "Defines the runner tags to which the security jobs has to execute.",
+                  "items": {
+                    "minLength": 1,
+                    "type": "string"
+                  }
+                },
+                "ci_configuration": {
+                  "type": "string"
+                }
+              },
+              "allOf": [
+                {
+                  "if": {
+                    "properties": {
+                      "scan": {
+                        "const": "custom"
+                      }
+                    }
+                  },
+                  "then": {
+                    "required": [
+                      "ci_configuration"
+                    ],
+                    "maxProperties": 2
+                  }
+                },
+                {
+                  "if": {
+                    "properties": {
+                      "scan": {
+                        "const": "dast"
+                      }
+                    }
+                  },
+                  "then": {
+                    "required": [
+                      "site_profile"
+                    ],
+                    "maxProperties": 5
+                  }
+                },
+                {
+                  "if": {
+                    "properties": {
+                      "scan": {
+                        "const": "secret_detection"
+                      }
+                    }
+                  },
+                  "then": {
+                    "maxProperties": 3
+                  }
+                },
+                {
+                  "if": {
+                    "properties": {
+                      "scan": {
+                        "const": "cluster_image_scanning"
+                      }
+                    }
+                  },
+                  "then": {
+                    "maxProperties": 3
+                  }
+                },
+                {
+                  "if": {
+                    "properties": {
+                      "scan": {
+                        "const": "container_scanning"
+                      }
+                    }
+                  },
+                  "then": {
+                    "maxProperties": 3
+                  }
+                },
+                {
+                  "if": {
+                    "properties": {
+                      "scan": {
+                        "const": "sast"
+                      }
+                    }
+                  },
+                  "then": {
+                    "maxProperties": 3
+                  }
+                }
+              ],
+              "additionalProperties": false
+            }
+          }
+        }
+      }
+    },
+    "scan_result_policy": {
+      "type": "array",
+      "description": "Declares actions to be enforced based on scan results.",
+      "additionalItems": false,
+      "items": {
+        "maxItems": 5,
+        "anyOf": [
+          {
+            "required": [
+              "name",
+              "enabled",
+              "rules",
+              "actions"
+            ]
+          },
+          {
+            "required": [
+              "name",
+              "enabled",
+              "rules",
+              "approval_settings"
+            ]
+          }
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "description": "Name for the policy.",
+            "minLength": 1,
+            "maxLength": 255,
+            "type": "string",
+            "pattern": "^(?!License-Check$|Coverage-Check$)"
+          },
+          "description": {
+            "description": "Specifies the longer description of the policy.",
+            "type": "string"
+          },
+          "enabled": {
+            "description": "Whether to enforce this policy or not.",
+            "type": "boolean"
+          },
+          "policy_scope": {
+            "type": "object",
+            "properties": {
+              "compliance_frameworks": {
+                "description": "Specifies for which compliance frameworks this policy should be applied to.",
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "integer"
+                    }
+                  }
+                }
+              },
+              "projects": {
+                "type": "object",
+                "description": "Specifies for which projects this policy should be applied to.",
+                "properties": {
+                  "including": {
+                    "type": "array",
+                    "description": "Specifies projects where this policy should be applied to.",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "integer",
+                          "description": "Specifies the ID of the project."
+                        }
+                      }
+                    }
+                  },
+                  "excluding": {
+                    "type": "array",
+                    "description": "Specifies projects where this policy should not be applied to.",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "integer",
+                          "description": "Specifies the ID of the project."
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "rules": {
+            "description": "Specifies conditions when a this policy should be applied.",
+            "type": "array",
+            "maxItems": 5,
+            "additionalItems": false,
+            "items": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "enum": [
+                    "scan_finding",
+                    "license_finding",
+                    "any_merge_request"
+                  ],
+                  "type": "string",
+                  "description": "Specified a type of the policy rule. `scan_finding`/`license_finding`/`any_merge_request` rule enforces the defined actions based on the provided information."
+                },
+                "branches": {
+                  "type": "array",
+                  "description": "Specifies a list of protected branches that should be considered to enforce this policy.",
+                  "additionalItems": false,
+                  "items": {
+                    "minLength": 1,
+                    "type": "string"
+                  }
+                },
+                "branch_type": {
+                  "type": "string",
+                  "description": "Which types of branches to scan.",
+                  "enum": [
+                    "default",
+                    "protected"
+                  ]
+                },
+                "branch_exceptions": {
+                  "type": "array",
+                  "minItems": 1,
+                  "uniqueItems": true,
+                  "items": {
+                    "oneOf": [
+                      {
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "name": {
+                            "type": "string",
+                            "minLength": 1
+                          },
+                          "full_path": {
+                            "type": "string",
+                            "minLength": 1
+                          }
+                        },
+                        "required": [
+                          "name",
+                          "full_path"
+                        ]
+                      }
+                    ]
+                  }
+                },
+                "scanners": {
+                  "description": "Specifies a list of scanners that should be considered to enforce this policy. Possible values: `sast`, `secret_detection`, `dependency_scanning`, `container_scanning`, `dast`, `coverage_fuzzing`, `api_fuzzing`.",
+                  "type": "array",
+                  "additionalItems": false,
+                  "items": {
+                    "minLength": 1,
+                    "type": "string"
+                  }
+                },
+                "vulnerabilities_allowed": {
+                  "description": "Specifies a number of vulnerabilities allowed before this rule is enforced.",
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "severity_levels": {
+                  "description": "Specifies a list of vulnerability security levels that should be concidered to enforce this policy. Possible values: `info`, `unknown`, `low`, `medium`, `high`, `critical`.",
+                  "type": "array",
+                  "additionalItems": false,
+                  "items": {
+                    "type": "string",
+                    "enum": [
+                      "critical",
+                      "high",
+                      "medium",
+                      "low",
+                      "info",
+                      "unknown"
+                    ]
+                  }
+                },
+                "vulnerability_states": {
+                  "type": "array",
+                  "description": "Specifies a list of vulnerability states that should be considered to enforce this policy. The `newly_detected` state considers all newly detected vulnerabilities regardless of their status or dismissal. The other states consider findings that match the selected state and already exist in the default branch.",
+                  "additionalItems": false,
+                  "items": {
+                    "type": "string",
+                    "enum": [
+                      "newly_detected",
+                      "detected",
+                      "confirmed",
+                      "resolved",
+                      "dismissed",
+                      "new_needs_triage",
+                      "new_dismissed"
+                    ]
+                  }
+                },
+                "vulnerability_attributes": {
+                  "type": "object",
+                  "properties": {
+                    "false_positive": {
+                      "type": "boolean"
+                    },
+                    "fix_available": {
+                      "type": "boolean"
+                    }
+                  },
+                  "additionalProperties": false
+                },
+                "vulnerability_age": {
+                  "type": "object",
+                  "properties": {
+                    "operator": {
+                      "enum": [
+                        "greater_than",
+                        "less_than"
+                      ],
+                      "type": "string",
+                      "description": "Specify the operator to which the age value is compared to"
+                    },
+                    "value": {
+                      "description": "Specifies an age number",
+                      "type": "integer"
+                    },
+                    "interval": {
+                      "enum": [
+                        "day",
+                        "week",
+                        "month",
+                        "year"
+                      ],
+                      "type": "string",
+                      "description": "Specify the interval to which the age value is compared to"
+                    }
+                  },
+                  "required": [
+                    "operator",
+                    "value",
+                    "interval"
+                  ],
+                  "additionalProperties": false
+                },
+                "match_on_inclusion": {
+                  "type": "boolean",
+                  "description": "Specifies whether to match licenses on inclusion or exclusion."
+                },
+                "license_types": {
+                  "type": "array",
+                  "description": "Specifies the licenses to match.",
+                  "minItems": 1,
+                  "uniqueItems": true,
+                  "additionalItems": false,
+                  "items": {
+                    "type": "string",
+                    "minLength": 1
+                  }
+                },
+                "license_states": {
+                  "type": "array",
+                  "minItems": 1,
+                  "uniqueItems": true,
+                  "additionalItems": false,
+                  "description": "States which license finding states to match on.",
+                  "items": {
+                    "type": "string",
+                    "enum": [
+                      "newly_detected",
+                      "detected"
+                    ]
+                  }
+                },
+                "commits": {
+                  "type": "string",
+                  "description": "Specifies the commits to match.",
+                  "enum": [
+                    "any",
+                    "unsigned"
+                  ]
+                }
+              },
+              "oneOf": [
+                {
+                  "required": [
+                    "branches"
+                  ]
+                },
+                {
+                  "required": [
+                    "branch_type"
+                  ]
+                }
+              ],
+              "allOf": [
+                {
+                  "if": {
+                    "properties": {
+                      "type": {
+                        "const": "scan_finding"
+                      }
+                    }
+                  },
+                  "then": {
+                    "required": [
+                      "type",
+                      "scanners",
+                      "vulnerabilities_allowed",
+                      "severity_levels",
+                      "vulnerability_states"
+                    ]
+                  }
+                },
+                {
+                  "if": {
+                    "properties": {
+                      "type": {
+                        "const": "license_finding"
+                      }
+                    }
+                  },
+                  "then": {
+                    "required": [
+                      "type",
+                      "match_on_inclusion",
+                      "license_types",
+                      "license_states"
+                    ]
+                  }
+                },
+                {
+                  "if": {
+                    "properties": {
+                      "type": {
+                        "const": "any_merge_request"
+                      }
+                    }
+                  },
+                  "then": {
+                    "required": [
+                      "type",
+                      "commits"
+                    ]
+                  }
+                }
+              ],
+              "additionalProperties": false
+            }
+          },
+          "actions": {
+            "description": "Specifies a list of actions that should be enforced in this policy. At least one of `user_approvers`, `user_approvers_ids`, `group_approvers`, `group_approvers_ids`, `role_approvers` should be provided.",
+            "type": "array",
+            "additionalItems": false,
+            "items": {
+              "anyOf": [
+                {
+                  "required": [
+                    "type",
+                    "approvals_required",
+                    "user_approvers"
+                  ]
+                },
+                {
+                  "required": [
+                    "type",
+                    "approvals_required",
+                    "user_approvers_ids"
+                  ]
+                },
+                {
+                  "required": [
+                    "type",
+                    "approvals_required",
+                    "group_approvers"
+                  ]
+                },
+                {
+                  "required": [
+                    "type",
+                    "approvals_required",
+                    "group_approvers_ids"
+                  ]
+                },
+                {
+                  "required": [
+                    "type",
+                    "approvals_required",
+                    "role_approvers"
+                  ]
+                }
+              ],
+              "type": "object",
+              "properties": {
+                "type": {
+                  "enum": [
+                    "require_approval"
+                  ],
+                  "type": "string",
+                  "description": "Specified a type of the policy action. `require_approval` action specifies required approvals (from selected groups or users) when this policy is applied."
+                },
+                "approvals_required": {
+                  "description": "Specifies a number of required merge request approvals.",
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 100
+                },
+                "user_approvers": {
+                  "description": "Specifies a list of users (by usernames) required to approve affected merge request.",
+                  "type": "array",
+                  "minItems": 1,
+                  "additionalItems": false,
+                  "items": {
+                    "minLength": 1,
+                    "type": "string"
+                  }
+                },
+                "user_approvers_ids": {
+                  "description": "Specifies a list of users (by IDs) required to approve affected merge request.",
+                  "type": "array",
+                  "minItems": 1,
+                  "additionalItems": false,
+                  "items": {
+                    "minLength": 1,
+                    "type": "integer"
+                  }
+                },
+                "group_approvers": {
+                  "type": "array",
+                  "description": "Specifies a list of groups (by group path) required to approve affected merge request.",
+                  "minItems": 1,
+                  "additionalItems": false,
+                  "items": {
+                    "minLength": 1,
+                    "type": "string"
+                  }
+                },
+                "group_approvers_ids": {
+                  "type": "array",
+                  "description": "Specifies a list of groups (by IDs) required to approve affected merge request.",
+                  "minItems": 1,
+                  "additionalItems": false,
+                  "items": {
+                    "minLength": 1,
+                    "type": "integer"
+                  }
+                },
+                "role_approvers": {
+                  "type": "array",
+                  "description": "Specifies a list of roles required to approve affected merge request.",
+                  "minItems": 1,
+                  "additionalItems": false,
+                  "items": {
+                    "type": "string",
+                    "enum": [
+                      "guest",
+                      "reporter",
+                      "developer",
+                      "maintainer",
+                      "owner"
+                    ],
+                    "minLength": 1
+                  }
+                }
+              }
+            }
+          },
+          "approval_settings": {
+            "type": "object",
+            "properties": {
+              "prevent_approval_by_author": {
+                "type": "boolean"
+              },
+              "prevent_approval_by_commit_author": {
+                "type": "boolean"
+              },
+              "remove_approvals_with_new_commit": {
+                "type": "boolean"
+              },
+              "require_password_to_approve": {
+                "type": "boolean"
+              },
+              "block_unprotecting_branches": {
+                "type": "boolean"
+              },
+              "prevent_force_pushing" : {
+                "type": "boolean"
+              }
+            }
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}

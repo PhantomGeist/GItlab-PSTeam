@@ -1,0 +1,17 @@
+mutation workspaceCreate($input: WorkspaceCreateInput!) {
+  workspaceCreate(input: $input) {
+    workspace {
+      id
+      name
+      namespace
+      projectId
+      desiredState
+      actualState
+      url
+      devfileRef
+      devfilePath
+      createdAt
+    }
+    errors
+  }
+}

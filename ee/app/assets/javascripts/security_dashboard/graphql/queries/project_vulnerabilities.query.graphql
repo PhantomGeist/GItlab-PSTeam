@@ -1,0 +1,64 @@
+#import "../fragments/vulnerability.fragment.graphql"
+#import "~/graphql_shared/fragments/page_info.fragment.graphql"
+
+query projectVulnerabilities(
+  $fullPath: ID!
+  $before: String
+  $after: String
+  $first: Int = 20
+  $last: Int
+  $severity: [VulnerabilitySeverity!]
+  $reportType: [VulnerabilityReportType!]
+  $scanner: [String!]
+  $scannerId: [VulnerabilitiesScannerID!]
+  $state: [VulnerabilityState!]
+  $dismissalReason: [VulnerabilityDismissalReason!]
+  $sort: VulnerabilitySort
+  $hasIssues: Boolean
+  $hasResolution: Boolean
+  $hasMergeRequest: Boolean
+  $includeExternalIssueLinks: Boolean = false
+  $vetEnabled: Boolean = false
+  $clusterAgentId: [ClustersAgentID!]
+  $image: [String!]
+) {
+  project(fullPath: $fullPath) {
+    id
+    vulnerabilities(
+      before: $before
+      after: $after
+      first: $first
+      last: $last
+      severity: $severity
+      reportType: $reportType
+      scanner: $scanner
+      scannerId: $scannerId
+      state: $state
+      dismissalReason: $dismissalReason
+      sort: $sort
+      hasIssues: $hasIssues
+      hasResolution: $hasResolution
+      hasMergeRequest: $hasMergeRequest
+      clusterAgentId: $clusterAgentId
+      image: $image
+    ) {
+      nodes {
+        ...VulnerabilityFragment
+        externalIssueLinks @include(if: $includeExternalIssueLinks) {
+          nodes {
+            id
+            issue: externalIssue {
+              externalTracker
+              webUrl
+              title
+              iid: relativeReference
+            }
+          }
+        }
+      }
+      pageInfo {
+        ...PageInfo
+      }
+    }
+  }
+}

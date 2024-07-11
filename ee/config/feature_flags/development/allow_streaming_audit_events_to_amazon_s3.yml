@@ -1,0 +1,8 @@
+---
+name: allow_streaming_audit_events_to_amazon_s3
+introduced_by_url: https://gitlab.com/gitlab-org/gitlab/-/merge_requests/131372
+rollout_issue_url: https://gitlab.com/gitlab-org/gitlab/-/issues/424726
+milestone: '16.5'
+type: development
+group: group::compliance
+default_enabled: false

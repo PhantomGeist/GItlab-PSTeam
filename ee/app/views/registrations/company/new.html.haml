@@ -1,0 +1,18 @@
+- page_title _('Start your Free Ultimate Trial')
+- content_for :page_specific_javascripts do
+  = render "layouts/google_tag_manager_head"
+  = render "layouts/one_trust"
+  = render "layouts/bizible"
+= render "layouts/google_tag_manager_body"
+
+.row
+  .col-md-6.m-sm-6
+    %h2.gl-pb-5.gl-my-0
+      = _("About your company")
+    #js-registrations-company-form{ data: create_company_form_data }
+
+  - if onboarding_status.trial?
+    .col-md-4.company-illustration{ data: { testid: 'trial-registration-column' } }
+      = image_tag 'illustrations/saas-trial-illustration.svg', alt: '', class: 'gl-display-none d-md-inline gl-w-full'
+  - else
+    = render 'shared/trial_reassurances'

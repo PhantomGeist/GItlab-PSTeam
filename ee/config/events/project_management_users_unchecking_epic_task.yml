@@ -1,0 +1,22 @@
+---
+description: An epic task has been unchecked
+category: InternalEventTracking
+action: project_management_users_unchecking_epic_task
+label_description:
+property_description:
+value_description:
+extra_properties:
+identifiers:
+- project
+- user
+- namespace
+product_section: dev
+product_stage: plan
+product_group: product_planning
+milestone: "16.5"
+introduced_by_url: https://gitlab.com/gitlab-org/gitlab/-/merge_requests/132027
+distributions:
+- ee
+tiers:
+- premium
+- ultimate

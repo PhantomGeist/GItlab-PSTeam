@@ -1,0 +1,8 @@
+---
+name: ci_data_ingestion_to_click_house
+introduced_by_url: https://gitlab.com/gitlab-org/gitlab/-/merge_requests/132010
+rollout_issue_url: https://gitlab.com/gitlab-org/gitlab/-/issues/424866
+milestone: '16.5'
+type: development
+group: group::runner
+default_enabled: false

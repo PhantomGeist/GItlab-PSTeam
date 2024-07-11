@@ -1,0 +1,14 @@
+- return unless RegistrationFeatures::MaintenanceMode.feature_available?
+
+%section.settings.no-animate#js-maintenance-mode-toggle{ class: ('expanded' if expanded_by_default?) }
+  .settings-header
+    %h4.settings-title.js-settings-toggle.js-settings-toggle-trigger-only
+      = _('Maintenance mode')
+    = render Pajamas::ButtonComponent.new(button_options: { class: 'js-settings-toggle' }) do
+      = expanded_by_default? ? _('Collapse') : _('Expand')
+    %p.gl-text-secondary
+      = _('Prevent users from performing write operations while GitLab maintenance is in progress.')
+      = link_to _('Learn more.'), help_page_path('administration/maintenance_mode/index'), target: '_blank', rel: 'noopener noreferrer'
+  .settings-content
+    #js-maintenance-mode-settings{ data: { "maintenance-enabled" => @application_setting.maintenance_mode,
+      "banner-message" => @application_setting.maintenance_mode_message } }

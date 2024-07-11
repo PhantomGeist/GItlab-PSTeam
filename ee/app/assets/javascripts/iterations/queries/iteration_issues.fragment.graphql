@@ -1,0 +1,21 @@
+#import "~/graphql_shared/fragments/user.fragment.graphql"
+#import "~/graphql_shared/fragments/page_info.fragment.graphql"
+
+fragment IterationIssues on IssueConnection {
+  count
+  pageInfo {
+    ...PageInfo
+  }
+  nodes {
+    id
+    iid
+    title
+    webUrl
+    state
+    assignees {
+      nodes {
+        ...User
+      }
+    }
+  }
+}

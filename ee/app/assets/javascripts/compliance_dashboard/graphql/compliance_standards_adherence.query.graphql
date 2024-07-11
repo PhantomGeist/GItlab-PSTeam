@@ -1,0 +1,44 @@
+#import "~/graphql_shared/fragments/page_info.fragment.graphql"
+
+query getProjectComplianceStandardsAdherence(
+  $fullPath: ID!
+  $after: String
+  $before: String
+  $first: Int
+  $last: Int
+) {
+  group(fullPath: $fullPath) {
+    id
+    projectComplianceStandardsAdherence(
+      after: $after
+      before: $before
+      first: $first
+      last: $last
+    ) {
+      nodes {
+        id
+        updatedAt
+        status
+        checkName
+        standard
+        project {
+          id
+          name
+          webUrl
+          complianceFrameworks {
+            nodes {
+              id
+              name
+              description
+              color
+              default
+            }
+          }
+        }
+      }
+      pageInfo {
+        ...PageInfo
+      }
+    }
+  }
+}

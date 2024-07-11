@@ -1,0 +1,5 @@
+---
+name: ai_vertex_embeddings
+introduced_by_url: https://gitlab.com/gitlab-org/gitlab/-/merge_requests/134540
+milestone: '16.6'
+group: group::ai-framework

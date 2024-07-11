@@ -1,0 +1,13 @@
+- return unless Gitlab.com?
+
+- namespace = local_assigns.fetch(:namespace)
+- minutes_usage = namespace.ci_minutes_usage
+- minutes_usage_presenter = Ci::Minutes::UsagePresenter.new(minutes_usage)
+- return unless minutes_usage.quota_enabled?
+
+
+- if minutes_usage_presenter.display_shared_runners_data?
+  %li
+    %span.light= _('Additional compute minutes:')
+    %strong
+      = ci_minutes_report(minutes_usage_presenter.purchased_minutes_report)

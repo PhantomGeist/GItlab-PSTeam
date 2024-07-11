@@ -1,0 +1,11 @@
+query orderPreview($namespaceId: ID!, $newProductId: String!, $newProductQuantity: Int!) {
+  orderPreview(
+    namespaceId: $namespaceId
+    newProductId: $newProductId
+    newProductQuantity: $newProductQuantity
+  ) {
+    targetDate
+    amount
+    amountWithoutTax
+  }
+}

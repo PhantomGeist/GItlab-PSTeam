@@ -1,0 +1,15 @@
+- cannot_unprotect = !local_assigns[:can_update]
+
+%td{ data: { label: s_("ProtectedBranch|Allowed to merge") } }
+  .js-allowed-to-merge{ data: { filter: true, disabled: cannot_unprotect, preselected_items: access_levels_data(protected_branch.merge_access_levels).to_json } }
+
+%td{ data: { label: s_("ProtectedBranch|Allowed to push and merge") } }
+  .js-allowed-to-push{ data: { filter: true, disabled: cannot_unprotect, preselected_items: access_levels_data(protected_branch.push_access_levels).to_json } }
+
+%td{ data: { label: s_("ProtectedBranch|Allowed to force push") } }
+  = render Pajamas::ToggleComponent.new(classes: 'js-force-push-toggle',
+    data: { testid: 'protected-branch-force-push-toggle' },
+    label: s_("ProtectedBranch|Toggle allowed to force push"),
+    is_checked: protected_branch.allow_force_push,
+    is_disabled: cannot_unprotect,
+    label_position: :hidden)

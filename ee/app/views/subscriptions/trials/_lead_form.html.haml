@@ -1,0 +1,20 @@
+- page_title _('Start your Free Ultimate Trial')
+- content_for :page_specific_javascripts do
+  = render 'layouts/google_tag_manager_head'
+  = render 'layouts/one_trust'
+= render 'layouts/google_tag_manager_body'
+
+.row.gl-align-items-center
+  .col-md-6.m-sm-6
+    %h2.gl-pb-5.gl-my-0
+      = _('Start your Free Ultimate Trial')
+
+    %p.gl-text-gray-700.gl-font-lg
+      = s_('Trial|Your GitLab Ultimate trial lasts for 30 days, but you can keep your free GitLab account forever. We just need some additional information to activate your trial.')
+
+    = yield :before_form
+
+    #js-trial-create-lead-form{ data: create_lead_form_data }
+
+  .col-md-4.trial-illustration
+    = image_tag 'illustrations/saas-trial-illustration.svg', alt: '', class: 'gl-display-none d-md-inline gl-w-full'

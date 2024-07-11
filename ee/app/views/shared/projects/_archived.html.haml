@@ -1,0 +1,4 @@
+- if project.marked_for_deletion?
+  = gl_badge_tag _('pending deletion'), { variant: :warning }, { class: 'gl-display-flex gl-ml-3' }
+- elsif project.archived
+  = gl_badge_tag _('archived'), { variant: :warning }, { class: 'gl-display-flex gl-ml-3' }

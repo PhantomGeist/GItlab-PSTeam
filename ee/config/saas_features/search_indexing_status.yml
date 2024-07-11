@@ -1,0 +1,5 @@
+---
+name: search_indexing_status
+introduced_by_url: https://gitlab.com/gitlab-org/gitlab/-/merge_requests/129077
+milestone: '16.5'
+group: group::global search

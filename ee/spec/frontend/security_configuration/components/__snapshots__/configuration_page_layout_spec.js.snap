@@ -1,0 +1,31 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Security Configuration Page Layout component matches the snapshot 1`] = `
+<article>
+  Page alert
+  <header
+    class="gl-border-b-1 gl-border-b-gray-100 gl-border-b-solid gl-display-flex gl-justify-content-space-between gl-mb-5 gl-mt-5"
+  >
+    <div
+      class="gl-display-flex gl-flex-direction-column gl-justify-content-space-between gl-md-flex-direction-row gl-w-full"
+    >
+      <div>
+        <h4
+          class="gl-mt-0"
+        >
+          Page title
+        </h4>
+        <p>
+          Scanner description
+        </p>
+      </div>
+      <div>
+        Action
+      </div>
+    </div>
+  </header>
+  <div>
+    form
+  </div>
+</article>
+`;

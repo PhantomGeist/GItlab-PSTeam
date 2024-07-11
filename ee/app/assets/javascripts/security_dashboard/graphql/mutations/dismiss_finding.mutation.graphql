@@ -1,0 +1,29 @@
+mutation dismissFinding(
+  $uuid: String!
+  $comment: String
+  $dismissalReason: VulnerabilityDismissalReason
+) {
+  securityFindingDismiss(
+    input: { uuid: $uuid, comment: $comment, dismissalReason: $dismissalReason }
+  ) {
+    errors
+    securityFinding {
+      vulnerability {
+        id
+        stateTransitions(last: 1) {
+          nodes {
+            author {
+              id
+              name
+              username
+              webUrl
+            }
+            comment
+            createdAt
+            toState
+          }
+        }
+      }
+    }
+  }
+}

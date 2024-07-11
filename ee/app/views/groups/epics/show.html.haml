@@ -1,0 +1,88 @@
+- @no_top_bar_container = false
+- @no_container = true
+- @content_class = "limit-container-width" unless fluid_layout
+
+- epic_reference = @epic.to_reference
+- sub_epics_feature_available = @group.licensed_feature_available?(:subepics)
+- related_epics_feature_available = @group.licensed_feature_available?(:related_epics)
+- issuable_health_status_feature_available = @group.licensed_feature_available?(:issuable_health_status)
+- scoped_labels_feature_available = @group.licensed_feature_available?(:scoped_labels)
+
+- allow_sub_epics = sub_epics_feature_available ? 'true' : 'false'
+- allow_issuable_health_status = issuable_health_status_feature_available ? 'true' : 'false'
+- allow_scoped_labels = scoped_labels_feature_available ? 'true' : 'false'
+
+- add_to_breadcrumbs _("Epics"), group_epics_path(@group)
+- breadcrumb_title epic_reference
+
+- page_title           "#{@epic.title} (#{epic_reference})", _("Epics")
+- page_description     @epic.description_html
+
+- page_card_attributes @epic.card_attributes
+- add_page_specific_style 'page_bundles/epics'
+- add_page_specific_style 'page_bundles/issues_show'
+- add_page_specific_style 'page_bundles/roadmap'
+- add_page_specific_style 'page_bundles/issuable'
+- add_page_specific_style 'page_bundles/labels'
+
+- add_page_startup_api_call discussions_path(@epic)
+- add_page_startup_graphql_call('epic/epic_details', { fullPath: @group.full_path, iid: @epic.iid })
+- add_page_startup_graphql_call('epic/epic_children', { fullPath: @group.full_path, iid: @epic.iid, pageSize: 100, epicEndCursor: '', issueEndCursor: '' })
+
+- containerClass = 'js-epic-container'
+- treeElementID = 'tree'
+- roadmapElementID = 'roadmap'
+
+%div{ class: [containerClass, container_class, @content_class] }
+  #epic-app-root{ data: epic_show_app_data(@epic),
+    'data-report-abuse-path' => add_category_abuse_reports_path,
+    'data-allow-sub-epics' => allow_sub_epics,
+    'data-tree-element-selector' => "##{treeElementID}",
+    'data-roadmap-element-selector' => "##{roadmapElementID}",
+    'data-container-element-selector' => ".#{containerClass}" }
+
+  .gl-display-flex.justify-content-between.emoji-list-container.js-noteable-awards
+    = render 'award_emoji/awards_block', awardable: @epic, inline: true, api_awards_path: award_emoji_epics_api_path(@epic), new_custom_emoji_path: new_custom_emoji_path(@group)
+  %div{ id: treeElementID, class: ['tab-pane', 'show', 'active'] }
+    .row
+      %section.col-md-12
+        #js-tree{ data: { id: @epic.to_global_id,
+          type: 'Epic',
+          numerical_id: @epic.id,
+          iid: @epic.iid,
+          group_name: @group.name,
+          group_id: @group.id,
+          full_path: @group.full_path,
+          auto_complete_epics: allow_sub_epics,
+          auto_complete_issues: 'true',
+          user_signed_in: current_user.present? ? 'true' : 'false',
+          allow_issuable_health_status: allow_issuable_health_status,
+          allow_scoped_labels: allow_scoped_labels,
+          allow_sub_epics: allow_sub_epics,
+          initial: issuable_initial_data(@epic).to_json,
+          roadmap_app_data: sub_epics_feature_available ? { epics_path: group_epics_path(@group, parent_id: @epic.id, format: :json),
+            group_id: @group.id,
+            iid: @epic.iid,
+            full_path: @group.full_path,
+            empty_state_illustration: image_path('illustrations/epics/roadmap.svg'),
+            has_filters_applied: false,
+            new_epic_path: new_group_epic_path(@group),
+            list_epics_path: group_epics_path(@group),
+            epics_docs_path: help_page_path('user/group/epics/index'),
+            preset_type: roadmap_layout,
+            epics_state: 'all',
+            sorted_by: roadmap_sort_order,
+            inner_height: '600',
+            child_epics: true }.to_json : 'null' } }
+  - if related_epics_feature_available
+    #js-related-epics{ data: { endpoint: group_epic_related_epic_links_path(@group, @epic),
+      can_add_related_epics: "#{can?(current_user, :admin_epic_link_relation, @epic)}",
+      help_path: help_page_path('user/group/epics/linked_epics'),
+      show_categorized_epics: 'true' } }
+
+  .row
+    %section.col-md-12
+      -# haml-lint:disable InlineJavaScript
+      %script.js-notes-data{ type: "application/json" }= initial_notes_data(true).to_json.html_safe
+      .issuable-discussion
+        = render 'discussion'

@@ -1,0 +1,31 @@
+query getContributionsData(
+  $fullPath: ID!
+  $startDate: ISO8601Date!
+  $endDate: ISO8601Date!
+  $nextPageCursor: String = ""
+) {
+  group(fullPath: $fullPath) {
+    id
+    contributions(from: $startDate, to: $endDate, after: $nextPageCursor) {
+      nodes {
+        repoPushed
+        mergeRequestsCreated
+        mergeRequestsMerged
+        mergeRequestsClosed
+        mergeRequestsApproved
+        issuesCreated
+        issuesClosed
+        totalEvents
+        user {
+          id
+          name
+          webUrl
+        }
+      }
+      pageInfo {
+        endCursor
+        hasNextPage
+      }
+    }
+  }
+}

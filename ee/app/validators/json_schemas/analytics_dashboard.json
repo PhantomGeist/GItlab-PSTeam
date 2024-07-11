@@ -1,0 +1,142 @@
+{
+  "$schema": "http://json-schema.org/draft-06/schema#",
+  "$ref": "#/definitions/AnalyticsDashboard",
+  "definitions": {
+    "Welcome6": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "version": {
+          "const": "1"
+        },
+        "title": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "panels": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Panel"
+          }
+        }
+      },
+      "required": [
+        "description",
+        "title",
+        "version",
+        "panels"
+      ],
+      "title": "AnalyticsDashboard"
+    },
+    "Panel": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "title": {
+          "type": "string"
+        },
+        "gridAttributes": {
+          "$ref": "#/definitions/GridAttributes"
+        },
+        "visualization": {
+          "type": "string"
+        },
+        "queryOverrides": {
+          "$ref": "#/definitions/QueryOverrides"
+        },
+        "options": {
+          "$ref": "#/definitions/PanelOptions"
+        }
+      },
+      "required": [
+        "gridAttributes",
+        "queryOverrides",
+        "title",
+        "visualization"
+      ],
+      "title": "Panel"
+    },
+    "GridAttributes": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "yPos": {
+          "type": "integer"
+        },
+        "xPos": {
+          "type": "integer"
+        },
+        "width": {
+          "type": "integer"
+        },
+        "height": {
+          "type": "integer"
+        },
+        "minWidth": {
+          "type": "integer"
+        },
+        "minHeight": {
+          "type": "integer"
+        },
+        "maxWidth": {
+          "type": "integer"
+        },
+        "maxHeight": {
+          "type": "integer"
+        }
+      },
+      "required": [
+        "height",
+        "width",
+        "xPos",
+        "yPos"
+      ],
+      "title": "GridAttributes"
+    },
+    "PanelOptions": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "decimalPlaces": {
+          "type": "integer"
+        }
+      },
+      "required": [
+
+      ],
+      "title": "PanelOptions"
+    },
+    "QueryOverrides": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "timeDimensions": {
+          "$ref": "#/definitions/TimeDimensions"
+        }
+      },
+      "required": [
+        "timeDimensions"
+      ],
+      "title": "QueryOverrides"
+    },
+    "TimeDimensions": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "dateRange": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "date"
+          }
+        }
+      },
+      "required": [
+        "dateRange"
+      ],
+      "title": "TimeDimensions"
+    }
+  }
+}

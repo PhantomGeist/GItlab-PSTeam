@@ -1,0 +1,27 @@
+---
+data_category: optional
+key_path: counts_monthly.aggregated_metrics.i_testing_paid_monthly_active_user_total
+description: Aggregated count of users who have engaged with a Premium or Ultimate
+  tier testing feature per month.
+product_section: ops
+product_stage: verify
+product_group: pipeline_execution
+value_type: number
+status: active
+time_frame: 28d
+instrumentation_class: AggregatedMetric
+data_source: redis_hll
+options:
+  aggregate:
+    operator: OR
+    attribute: user_id
+  events:
+    - 'i_testing_full_code_quality_report_total'
+    - 'i_testing_group_code_coverage_visit_total'
+distribution:
+- ee
+tier:
+- premium
+- ultimate
+performance_indicator_type: []
+milestone: "<13.9"

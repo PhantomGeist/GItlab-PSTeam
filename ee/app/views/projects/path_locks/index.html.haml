@@ -1,0 +1,16 @@
+- page_title _("Locked files")
+
+.top-area
+  .nav-text
+    = sprite_icon('lock', size: 16, css_class: 'gl-vertical-align-middle')
+    = _("The following files or directories can only be modified by the user who locked them.")
+
+.locks
+  - if @path_locks.any?
+    %ul.content-list
+      = render @path_locks
+
+    = paginate @path_locks, theme: 'gitlab'
+
+  .nothing-here-block{ class: ('hidden' if @path_locks.any?) }
+    = _("Repository has no locks.")

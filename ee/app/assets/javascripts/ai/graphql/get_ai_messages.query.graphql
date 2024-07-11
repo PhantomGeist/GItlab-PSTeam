@@ -1,0 +1,16 @@
+query getAiMessages {
+  aiMessages {
+    nodes {
+      id
+      requestId
+      content
+      contentHtml
+      errors
+      role
+      timestamp
+      extras {
+        sources
+      }
+    }
+  }
+}

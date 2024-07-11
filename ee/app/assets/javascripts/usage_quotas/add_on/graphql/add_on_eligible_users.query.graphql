@@ -1,0 +1,45 @@
+#import "~/graphql_shared/fragments/page_info.fragment.graphql"
+
+query getAddOnEligibleUsers(
+  $fullPath: ID!
+  $addOnType: GitlabSubscriptionsAddOnType!
+  $addOnPurchaseIds: [GitlabSubscriptionsAddOnPurchaseID!]!
+  $search: String
+  $first: Int
+  $last: Int
+  $prevPageCursor: String
+  $nextPageCursor: String
+) {
+  namespace(fullPath: $fullPath) {
+    id
+    addOnEligibleUsers(
+      addOnType: $addOnType
+      search: $search
+      first: $first
+      last: $last
+      after: $nextPageCursor
+      before: $prevPageCursor
+    ) {
+      nodes {
+        id
+        username
+        name
+        publicEmail
+        avatarUrl
+        webUrl
+        lastActivityOn
+        addOnAssignments(addOnPurchaseIds: $addOnPurchaseIds) {
+          nodes {
+            # eslint-disable-next-line @graphql-eslint/require-id-when-available
+            addOnPurchase {
+              name
+            }
+          }
+        }
+      }
+      pageInfo {
+        ...PageInfo
+      }
+    }
+  }
+}

@@ -1,0 +1,13 @@
+- expanded = expanded_by_default?
+
+- if @group.licensed_feature_available?(:protected_environments)
+  %section.protected-environments-settings.settings.no-animate#js-protected-environments-settings{ class: ('expanded' if expanded) }
+    .settings-header
+      %h4.settings-title.js-settings-toggle.js-settings-toggle-trigger-only
+        = _('Protected environments')
+      = render Pajamas::ButtonComponent.new(button_options: { class: 'js-settings-toggle' }) do
+        = expanded ? _('Collapse') : _('Expand')
+      %p.gl-text-secondary
+        = s_('ProtectedEnvironment|Only specified groups can execute deployments in protected environments.')
+    .settings-content
+      = render partial: 'groups/protected_environments/environments_list'

@@ -1,0 +1,8 @@
+- if show_contact_sales_button?(purchase_link.action, plan_offer_type)
+  .js-hand-raise-lead-button{ data: { **hand_raise_props(namespace, glm_content: 'billing-group'),
+                                      track_action: 'click_link',
+                                      track_label: 'hand_raise_lead_form',
+                                      track_property: plan.code } }
+- if show_upgrade_button
+  = render Pajamas::ButtonComponent.new(variant: :confirm, href: plan_purchase_or_upgrade_url(namespace, plan), button_options: { class: ['gl-ml-3', upgrade_button_css_classes(namespace, plan, is_current)], data: billing_upgrade_button_data(plan) }) do
+    = upgrade_button_text(plan_offer_type)

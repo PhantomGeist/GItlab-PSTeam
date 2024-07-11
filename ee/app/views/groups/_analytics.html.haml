@@ -1,0 +1,18 @@
+- can_see_analytics_dashboards = group_analytics_dashboard_available?(@group)
+- can_see_insights = @group.insights_available?
+- can_see_vsd_settings = can?(current_user, :modify_value_stream_dashboard_settings, @group)
+
+- return unless can_see_analytics_dashboards || can_see_insights || can_see_vsd_settings
+
+%section.settings.no-animate{ class: ('expanded' if expanded) }
+  .settings-header
+    %h4.settings-title.js-settings-toggle.js-settings-toggle-trigger-only{ role: 'button' }
+      = s_('GroupSettings|Analytics')
+    = render Pajamas::ButtonComponent.new(button_options: { class: 'js-settings-toggle' }) do
+      = expanded ? _('Collapse') : _('Expand')
+    %p.gl-text-secondary
+      = s_('GroupSettings|Configure analytics features for this group.')
+  .settings-content
+    = render 'analytics_dashboards' if can_see_analytics_dashboards
+    = render 'value_stream_dashboard' if can_see_vsd_settings
+    = render 'insights' if can_see_insights

@@ -1,0 +1,17 @@
+fragment PackageSettingsFields on PackageSettings {
+  mavenDuplicatesAllowed
+  mavenDuplicateExceptionRegex
+  genericDuplicatesAllowed
+  genericDuplicateExceptionRegex
+  nugetDuplicatesAllowed
+  nugetDuplicateExceptionRegex
+  mavenPackageRequestsForwarding
+  lockMavenPackageRequestsForwarding
+  mavenPackageRequestsForwardingLocked
+  npmPackageRequestsForwarding
+  lockNpmPackageRequestsForwarding
+  npmPackageRequestsForwardingLocked
+  pypiPackageRequestsForwarding
+  lockPypiPackageRequestsForwarding
+  pypiPackageRequestsForwardingLocked
+}

@@ -1,0 +1,30 @@
+---
+data_category: optional
+key_path: redis_hll_counters.compliance.compliance_total_unique_counts_weekly
+description: Unique count of compliance actions in a given week
+product_section: sec
+product_stage: govern
+product_group: compliance
+value_type: number
+status: broken
+repair_issue_url: https://gitlab.com/gitlab-org/gitlab/-/issues/378091
+time_frame: 7d
+data_source: redis_hll
+instrumentation_class: AggregatedMetric
+options:
+  aggregate:
+    operator: OR
+    attribute: user_id
+  events:
+  - g_compliance_dashboard
+  - g_compliance_audit_events
+  - i_compliance_audit_events
+  - i_compliance_credential_inventory
+  - a_compliance_audit_events_api
+distribution:
+- ee
+tier:
+- premium
+- ultimate
+performance_indicator_type: []
+milestone: "<13.9"

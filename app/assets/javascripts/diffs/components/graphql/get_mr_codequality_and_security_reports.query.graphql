@@ -1,0 +1,70 @@
+query getMRCodequalityAndSecurityReports($fullPath: ID!, $iid: String!) {
+  project(fullPath: $fullPath) {
+    id
+    mergeRequest(iid: $iid) {
+      id
+      title
+      hasSecurityReports
+      codequalityReportsComparer {
+        report {
+          status
+          newErrors {
+            description
+            fingerprint
+            severity
+            filePath
+            line
+            webUrl
+            engineName
+          }
+          resolvedErrors {
+            description
+            fingerprint
+            severity
+            filePath
+            line
+            webUrl
+            engineName
+          }
+          existingErrors {
+            description
+            fingerprint
+            severity
+            filePath
+            line
+            webUrl
+            engineName
+          }
+          summary {
+            errored
+            resolved
+            total
+          }
+        }
+      }
+      sastReport: findingReportsComparer(reportType: SAST) {
+        status
+        report {
+          added {
+            uuid
+            title
+            description
+            state
+            severity
+            foundByPipelineIid
+            location {
+              ... on VulnerabilityLocationSast {
+                file
+                startLine
+                endLine
+                vulnerableClass
+                vulnerableMethod
+                blobPath
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

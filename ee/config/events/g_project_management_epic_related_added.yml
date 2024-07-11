@@ -1,0 +1,22 @@
+---
+description: A related epic has been added
+category: InternalEventTracking
+action: g_project_management_epic_related_added
+label_description:
+property_description:
+value_description:
+extra_properties:
+identifiers:
+- project
+- user
+- namespace
+product_section: dev
+product_stage: plan
+product_group: product_planning
+milestone: "16.5"
+introduced_by_url: https://gitlab.com/gitlab-org/gitlab/-/merge_requests/132030
+distributions:
+- ee
+tiers:
+- premium
+- ultimate

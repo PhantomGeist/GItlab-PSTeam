@@ -1,0 +1,33 @@
+- return unless License.feature_available?(:product_analytics) && Feature.enabled?(:product_analytics_admin_settings)
+- expanded = integration_expanded?('product_analytics_')
+
+%section.settings.as-product-analytics.no-animate#js-product-analytics-settings{ class: ('expanded' if expanded) }
+  .settings-header
+    %h4.settings-title.js-settings-toggle.js-settings-toggle-trigger-only
+      = _('Product analytics')
+    = render Pajamas::ButtonComponent.new(button_options: { class: 'js-settings-toggle' }) do
+      = expanded ? _('Collapse') : _('Expand')
+    %p.gl-text-secondary
+      = s_('AdminSettings|Configure product analytics to track events within your project applications.')
+      = link_to _('Learn more.'), help_page_path('user/product_analytics/index')
+  .settings-content
+    = gitlab_ui_form_for @application_setting, url: general_admin_application_settings_path(anchor: 'js-product-analytics-settings'), html: { class: 'fieldset-form', id: 'product-analytics-settings', autocomplete: 'off' } do |f|
+      = form_errors(@application_setting)
+
+      %fieldset
+        .form-group
+          = f.gitlab_ui_checkbox_component :product_analytics_enabled, s_('AdminSettings|Enable product analytics')
+        = render partial: 'product_analytics_configurator_settings', locals: { f: f }
+        .form-group
+          = f.label :product_analytics_data_collector_host, s_('AdminSettings|Collector host'), class: 'label-light'
+          = f.url_field :product_analytics_data_collector_host, class: 'form-control gl-form-input', placeholder: 'https://collector.gitlab.com'
+          .form-text.text-muted
+            = s_('AdminSettings|The host of your data collector instance.')
+        .form-group
+          = f.label :cube_api_base_url, s_('AdminSettings|Cube API URL'), class: 'label-light'
+          = f.url_field :cube_api_base_url, class: 'form-control gl-form-input', placeholder: 'https://cube.gitlab.com'
+          .form-text.text-muted
+            = s_('AdminSettings|The URL of your Cube instance.')
+        .form-group
+          .js-input-copy-visibility{ data: cube_api_key_data(form_name: 'application_setting', value: @application_setting.cube_api_key) }
+      = f.submit _('Save changes'), pajamas_button: true, data: {event_tracking: 'user_edited_cluster_configuration'}

@@ -1,0 +1,22 @@
+---
+data_category: optional
+key_path: redis_hll_counters.compliance.i_compliance_audit_events_weekly
+description: Unique users that have viewed the instance-level audit events screen
+product_section: sec
+product_stage: govern
+product_group: compliance
+value_type: number
+status: active
+time_frame: 7d
+data_source: redis_hll
+instrumentation_class: RedisHLLMetric
+options:
+  events:
+  - i_compliance_audit_events
+distribution:
+- ee
+tier:
+- premium
+- ultimate
+performance_indicator_type: []
+milestone: "<13.9"

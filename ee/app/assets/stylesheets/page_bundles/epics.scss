@@ -1,0 +1,32 @@
+@import 'page_bundles/mixins_and_variables_and_functions';
+
+.is-ghost {
+  opacity: 0.3;
+  pointer-events: none;
+}
+
+@include media-breakpoint-down(xs) {
+  .epic-page-container {
+    .detail-page-header {
+      display: flex;
+    }
+
+    .detail-page-header-actions {
+      margin-top: 0;
+    }
+  }
+}
+
+.new-epic-form .labels-select-wrapper.is-embedded {
+  width: $gl-dropdown-width;
+
+  .labels-select-dropdown-contents {
+    min-height: 335px;
+  }
+}
+
+.add-item-form-container {
+  .select-project-dropdown .gl-dropdown-item-text-primary {
+    display: flex;
+  }
+}

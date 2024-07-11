@@ -1,0 +1,63 @@
+- content_for :page_specific_javascripts do
+  = render "layouts/google_tag_manager_head"
+  = render "layouts/one_trust"
+= render "layouts/google_tag_manager_body"
+
+- page_title s_("UsageQuota|Usage")
+- @force_desktop_expanded_sidebar = true
+
+- if Feature.enabled?(:usage_quotas_for_all_editions, @group)
+  #js-usage-quotas-view{ data: { namespace_name: @group.name } }
+- else
+  - if show_product_purchase_success_alert?
+    = render 'product_purchase_success_alert', product_name: params[:purchased_product]
+
+  %h1.page-title.gl-font-size-h-display
+    = s_('UsageQuota|Usage Quotas')
+
+  .row
+    .col-sm-6{ data: { testid: 'group-usage-message' } }
+      %p.gl-text-secondary= s_('UsageQuota|Usage of group resources across the projects in the %{strong_start}%{group_name}%{strong_end} group').html_safe % { strong_start: '<strong>'.html_safe, strong_end: '</strong>'.html_safe, group_name: @group.name }
+
+  = gl_tabs_nav({ class: 'js-storage-tabs' }) do
+    = gl_tab_link_to '#seats-quota-tab', data: { testid: 'seats-tab' }, item_active: true do
+      = s_('UsageQuota|Seats')
+    - if show_code_suggestions_tab?(@group)
+      = gl_tab_link_to '#code-suggestions-usage-tab', data: { testid: 'code-suggestions-tab' } do
+        = s_('UsageQuota|Code Suggestions')
+    - if can? current_user, :admin_ci_minutes, @group
+      = gl_tab_link_to '#pipelines-quota-tab', data: { testid: 'pipelines-tab' } do
+        =  s_('UsageQuota|Pipelines')
+    = gl_tab_link_to '#storage-quota-tab', data: { testid: 'storage-tab' } do
+      = s_('UsageQuota|Storage')
+    - if Feature.enabled?(:data_transfer_monitoring, @group)
+      = gl_tab_link_to '#transfer-quota-tab' do
+        = s_('UsageQuota|Transfer')
+    - if show_product_analytics_usage_quota_tab?(@group)
+      = gl_tab_link_to '#product-analytics-usage-quota-tab' do
+        = s_('UsageQuota|Product analytics')
+
+  .tab-content
+    .tab-pane.active#seats-quota-tab
+      = render Namespaces::FreeUserCap::UsageQuotaAlertComponent.new(namespace: @group.root_ancestor,
+        user: current_user,
+        content_class: 'gl-my-3')
+
+      = render Namespaces::FreeUserCap::UsageQuotaTrialAlertComponent.new(namespace: @group.root_ancestor,
+        user: current_user,
+        content_class: 'gl-my-3')
+
+      #js-seat-usage-app{ data: group_seats_usage_quota_app_data(@group) }
+    - if show_code_suggestions_tab?(@group)
+      .tab-pane#code-suggestions-usage-tab
+        #js-code-suggestions-usage-app{ data: code_suggestions_usage_app_data(@group) }
+    .tab-pane#pipelines-quota-tab
+      #js-pipeline-usage-app{ data: pipeline_usage_app_data(@group) }
+    .tab-pane#storage-quota-tab
+      #js-storage-counter-app{ data: storage_usage_app_data(@group) }
+    - if Feature.enabled?(:data_transfer_monitoring, @group)
+      .tab-pane#transfer-quota-tab
+        #js-group-transfer-app{ data: group_transfer_app_data(@group) }
+    - if show_product_analytics_usage_quota_tab?(@group)
+      .tab-pane#product-analytics-usage-quota-tab
+        #js-product-analytics-usage-quota-app{ data: { namespace_path: @group.full_path } }

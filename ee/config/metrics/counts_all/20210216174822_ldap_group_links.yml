@@ -1,0 +1,18 @@
+---
+data_category: optional
+key_path: counts.ldap_group_links
+description: Number of groups that are synced via LDAP group sync `https://docs.gitlab.com/ee/user/group/access_and_permissions.html#manage-group-memberships-via-ldap`
+product_section: sec
+product_stage: govern
+product_group: authentication
+value_type: number
+status: active
+time_frame: all
+data_source: database
+distribution:
+- ee
+tier:
+- premium
+- ultimate
+performance_indicator_type: []
+milestone: "<13.9"

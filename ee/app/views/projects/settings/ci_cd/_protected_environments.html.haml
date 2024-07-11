@@ -1,0 +1,19 @@
+- expanded = expanded_by_default?
+- add_page_specific_style 'page_bundles/ci_cd_settings'
+
+- if @project.licensed_feature_available?(:protected_environments)
+  %section.protected-environments-settings.settings.no-animate#js-protected-environments-settings{ class: ('expanded' if expanded) }
+    .settings-header
+      %h4.settings-title.js-settings-toggle.js-settings-toggle-trigger-only
+        = _('Protected environments')
+      = render Pajamas::ButtonComponent.new(button_options: { class: 'js-settings-toggle' }) do
+        = expanded ? _('Collapse') : _('Expand')
+      %p.gl-text-secondary
+        = s_('ProtectedEnvironment|Only specified users can execute deployments in a protected environment.')
+    .settings-content
+      #js-protected-environments{ data: { project_id: @project.id,
+                                      api_link: help_page_path('api/protected_environments.md'),
+                                      docs_link: help_page_path('ci/environments/deployment_approvals.md', anchor: 'multiple-approval-rules') } }
+
+      = render partial: 'projects/protected_environments/group_environments_list'
+      = render 'projects/protected_environments/deployment_approval_options', project: @project

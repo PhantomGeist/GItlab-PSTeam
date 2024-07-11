@@ -1,0 +1,15 @@
+query getGroupClusterAgents($groupPath: ID!) {
+  group(fullPath: $groupPath) {
+    id
+    clusterAgents(hasRemoteDevelopmentAgentConfig: true) {
+      nodes {
+        id
+        name
+        project {
+          id
+          nameWithNamespace
+        }
+      }
+    }
+  }
+}

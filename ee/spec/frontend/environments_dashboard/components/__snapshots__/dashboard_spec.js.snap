@@ -1,0 +1,99 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`dashboard should match the snapshot 1`] = `
+<div
+  class="environments-dashboard"
+>
+  <gl-modal-stub
+    arialabel=""
+    dismisslabel="Close"
+    modalclass=""
+    modalid="add-projects-modal"
+    ok-disabled="true"
+    ok-title="Add projects"
+    size="md"
+    title="Add projects"
+    titletag="h4"
+  >
+    <p>
+      This dashboard displays 3 environments per project, and is linked to the Operations Dashboard. When you add or remove a project from one dashboard, GitLab adds or removes the project from the other.
+      <gl-link-stub
+        href="/help/user/operations_dashboard/index.html"
+        target="_blank"
+      >
+        More information
+      </gl-link-stub>
+    </p>
+    <project-selector-stub
+      maxlistheight="402"
+      projectsearchresults=""
+      selectedprojects=""
+      totalresults="0"
+    />
+  </gl-modal-stub>
+  <div
+    class="align-items-center d-flex flex-fill page-title-holder"
+  >
+    <h1
+      class="flex-fill gl-font-size-h-display js-dashboard-title page-title text-nowrap"
+    >
+      Environments Dashboard
+    </h1>
+    <gl-button-stub
+      buttontextclasses=""
+      category="primary"
+      class="js-add-projects-button"
+      icon=""
+      role="button"
+      size="medium"
+      tabindex="0"
+      variant="confirm"
+    >
+      Add projects
+    </gl-button-stub>
+  </div>
+  <p
+    class="js-page-limits-message mb-4 mt-2"
+  >
+    This dashboard displays 3 environments per project, and is linked to the Operations Dashboard. When you add or remove a project from one dashboard, GitLab adds or removes the project from the other.
+    <gl-link-stub
+      href="/help/user/operations_dashboard/index.html"
+      target="_blank"
+    >
+      More information
+    </gl-link-stub>
+  </p>
+  <div
+    class="gl-mt-3"
+  >
+    <gl-empty-state-stub
+      contentclass=""
+      invertindarkmode="true"
+      svgheight="150"
+      svgpath="/assets/illustrations/empty-state/empty-radar-md.svg"
+      title="Add a project to the dashboard"
+    >
+      The environments dashboard provides a summary of each project's environments' status, including pipeline and alert statuses.
+      <gl-link-stub
+        class="js-documentation-link"
+        href="/help/user/operations_dashboard/index.html"
+      >
+        View documentation
+      </gl-link-stub>
+      .
+      <gl-button-stub
+        buttontextclasses=""
+        category="primary"
+        class="js-add-projects-button"
+        icon=""
+        role="button"
+        size="medium"
+        tabindex="0"
+        variant="confirm"
+      >
+        Add projects
+      </gl-button-stub>
+    </gl-empty-state-stub>
+  </div>
+</div>
+`;

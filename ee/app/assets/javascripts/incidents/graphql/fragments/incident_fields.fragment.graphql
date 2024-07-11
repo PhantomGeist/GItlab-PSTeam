@@ -1,0 +1,6 @@
+fragment IncidentFields on Issue {
+  severity
+  escalationStatus
+  statusPagePublishedIncident
+  slaDueAt
+}

@@ -1,0 +1,158 @@
+Ruby:
+  - example: "def filter_by_iid(items, iid)
+      items.where(iid: iid)
+    end
+
+    def filter_by_title<cursor>
+
+    def filter_by_search(items, text)
+      items.search(text)
+    end
+    "
+    response: "def filter_by_title<new_code>(items, title)
+      items.where(title: title)
+    end"
+  - example: "module Resolvers
+                module DesignManagement
+                  class DesignResolver < BaseResolver
+                    type ::Types::DesignManagement::DesignType, null: true
+
+                    requires_argument!
+
+                    argument :id, ::Types::GlobalIDType[::DesignManagement::Design],
+                             required: false,
+                             description: 'Find a design by its ID.'
+
+                    argument :filename, GraphQL::Types::String,
+                             required: false,
+                             description: 'Find a design by its filename.'
+
+                    def resolve(filename: nil, <cursor>
+                    end
+
+                    def self.single
+                      self
+                    end
+    "
+    response: "def resolve(filename: nil, <new_code>id: nil)
+      params = parse_args(filename, id)
+
+      build_finder(params).execute.first"
+TypeScript:
+  - example: "function usernamesToEmails(usernames: string[]): string[] {
+              <cursor>
+            }"
+    response: "<new_code>usernames.map(username => `${username}@domain.com`);"
+  - example: "const filterBlcokedDomain = (users: any[]) => <cursor>"
+    response: "const filterBlcokedDomain = (users: any[]) => <new_code>{
+              return users.filter(user => !user.email.includes('@blocked.com'));
+            };"
+  - example: "class GitLabAPI {
+                   static async fetchPipelines(projectId: string) {
+                     const api_url= `https://gitlab.com/api/v4/projects/${projectId}/pipelines`;
+                     <cursor>"
+    response: "   <new_code>const response = await fetch(api_url);
+                      return await response.json();
+                    }
+                  }"
+Python:
+- example: "def process_data(data):
+                 <cursor>"
+  response: |-
+    def process_data(data):<new_code>
+        cleaned_data = []
+        for row in data:
+          cleaned_row = clean_row(row)
+          if cleaned_row:
+            cleaned_data.append(cleaned_row)
+        return cleaned_data
+- example: "import pandas as pd
+
+             df = pd.read_csv('data.csv')
+             <cursor>"
+  response: |-
+    df = pd.read_csv('data.csv')<new_code>
+    df.dropna(inplace=True)
+    df = df[df['column'] > 0]
+    print(df.shape)
+- example: "class Model():
+              def __init__(self):
+                self.loss = 0
+
+              def train_step(self, x, y):
+                  <cursor>"
+  response: |-
+        <new_code>y_pred = self.predict(x)
+        loss = self.loss_fn(y_pred, y)
+        self.loss += loss
+
+        return loss
+Go:
+- example: |
+    package main
+
+    import "net/http"
+
+    func main() {
+      http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) <cursor>
+
+      http.ListenAndServe(":8080", nil)
+    }
+  response: |
+      http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request)<new_code>{
+        w.Write([]byte("Hello World"))
+      })
+- example: |
+    package main
+
+    import "fmt"
+
+    type User struct <cursor>
+
+    func main() {
+      user := User{Name: "John Doe", Email: "john@doe.com"}
+
+      fmt.Println(user)
+
+      fmt.Println("User Name:", user.Name)
+      fmt.Println("User Email:", user.Email)
+    }
+  response: |
+    type User struct <new_code>{
+      Name string
+      Email string
+    }
+- example: |
+    package main
+
+    import "fmt"
+
+    type User struct {
+      Name string
+      Email string
+    }
+
+    func printUser(<cursor>)
+
+    func main() {
+      user := User{Name: "John Doe", Email: "john@doe.com"}
+    }
+  response: |
+     func printUser(<new_code>user User
+- example: |
+    package events
+
+    import "time"
+
+    type Event struct {
+      Name string
+      CreatedAt time.Time
+    }
+
+    const eventMaxDuration = 1000
+
+    func (e *Event) fresh() <cursor>
+  response: |
+    func (e *Event) fresh() <new_code> bool {
+      return time.Since(e.CreatedAt) < eventMaxDuration
+    }

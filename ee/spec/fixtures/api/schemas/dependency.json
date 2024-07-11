@@ -1,0 +1,76 @@
+{
+  "type": "object",
+  "required": [
+    "name",
+    "packager",
+    "version",
+    "location",
+    "vulnerabilities",
+    "licenses"
+  ],
+  "properties": {
+    "name": {
+      "type": "string"
+    },
+    "packager": {
+      "type": "string"
+    },
+    "version": {
+      "type": "string"
+    },
+    "location": {
+      "blob_path": {
+        "type": "string"
+      },
+      "path": {
+        "type": "string"
+      }
+    },
+    "project": {
+      "type": [
+        "object"
+      ],
+      "properties": {
+        "full_path": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        }
+      }
+    },
+    "project_count": {
+      "type": [
+        "integer"
+      ]
+    },
+    "occurrence_count": {
+      "type": [
+        "integer"
+      ]
+    },
+    "vulnerabilities": {
+      "type": "array",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "severity": {
+          "type": "string"
+        }
+      }
+    },
+    "licenses": {
+      "type": "array",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "url": {
+          "type": "string"
+        }
+      }
+    }
+  },
+  "additionalProperties": false
+}

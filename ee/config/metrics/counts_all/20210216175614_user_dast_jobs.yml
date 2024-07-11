@@ -1,0 +1,19 @@
+---
+key_path: usage_activity_by_stage.secure.user_dast_jobs
+description: Count of DAST jobs
+product_section: sec
+product_stage: secure
+product_group: dynamic_analysis
+value_type: number
+status: active
+time_frame: all
+instrumentation_class: CountUsersCreatingCiBuildsMetric
+options:
+  secure_type: dast
+data_source: database
+data_category: operational
+distribution:
+- ee
+tier:
+- ultimate
+milestone: "<13.9"

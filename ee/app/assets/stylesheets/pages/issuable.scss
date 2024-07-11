@@ -1,0 +1,49 @@
+.block {
+  &.weight {
+    .gl-field-error {
+      margin-top: $gl-padding-8;
+      margin-left: -6px;
+      display: flex;
+      align-items: center;
+    }
+  }
+}
+
+.limit-container-width {
+  .epic-page-container .issuable-details,
+  .emoji-list-container {
+    @include fixed-width-container;
+  }
+}
+
+.health-status {
+  line-height: $gl-line-height;
+
+  .status {
+    &-at-risk {
+      color: $red-500;
+      background-color: $red-100;
+    }
+
+    &-needs-attention {
+      color: $orange-700;
+      background-color: $orange-50;
+    }
+
+    &-on-track {
+      color: $green-600;
+      background-color: $green-100;
+    }
+  }
+
+  .gl-label-text {
+    font-weight: $gl-font-weight-bold;
+    font-size: 0.75rem;
+  }
+}
+
+.issuable-assignees {
+  a:not(.btn) {
+    color: inherit;
+  }
+}

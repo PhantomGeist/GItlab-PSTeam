@@ -1,0 +1,8 @@
+---
+name: scan_result_policies_block_force_push
+introduced_by_url: https://gitlab.com/gitlab-org/gitlab/-/merge_requests/133353
+rollout_issue_url: https://gitlab.com/gitlab-org/gitlab/-/issues/427260
+milestone: '16.5'
+type: development
+group: group::security policies
+default_enabled: false

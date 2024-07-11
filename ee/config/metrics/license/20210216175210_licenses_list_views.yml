@@ -1,0 +1,21 @@
+---
+data_category: optional
+key_path: counts.licenses_list_views
+description: Count to License List page views
+product_section: sec
+product_stage: secure
+product_group: composition_analysis
+value_type: string
+status: active
+time_frame: all
+data_source: redis
+instrumentation_class: RedisMetric
+options:
+  prefix: licenses_list
+  event: views
+distribution:
+- ee
+tier:
+- ultimate
+performance_indicator_type: []
+milestone: "<13.9"

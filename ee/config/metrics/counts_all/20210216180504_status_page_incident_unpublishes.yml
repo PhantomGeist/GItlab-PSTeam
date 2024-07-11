@@ -1,0 +1,21 @@
+---
+data_category: optional
+key_path: counts.status_page_incident_unpublishes
+description: Cumulative count of usages of unpublish operation
+product_section: ops
+product_stage: monitor
+product_group: monitor
+value_type: number
+status: active
+time_frame: all
+data_source: redis
+instrumentation_class: RedisMetric
+options:
+  prefix: status_page_incident
+  event: unpublishes
+distribution:
+- ee
+tier:
+- ultimate
+performance_indicator_type: []
+milestone: "<13.9"

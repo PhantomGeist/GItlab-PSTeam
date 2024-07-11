@@ -1,0 +1,28 @@
+#import "~/ci/catalog/graphql/fragments/catalog_resource.fragment.graphql"
+
+query getNamespaceCatalogResources(
+  $after: String
+  $before: String
+  $first: Int = 20
+  $fullPath: ID!
+  $last: Int
+) {
+  ciCatalogResources(
+    after: $after
+    before: $before
+    first: $first
+    projectPath: $fullPath
+    last: $last
+  ) {
+    pageInfo {
+      startCursor
+      endCursor
+      hasNextPage
+      hasPreviousPage
+    }
+    count
+    nodes {
+      ...CatalogResourceFields
+    }
+  }
+}

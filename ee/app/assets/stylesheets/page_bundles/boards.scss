@@ -1,0 +1,121 @@
+@import '../../../../../app/assets/stylesheets/page_bundles/boards';
+
+.board-add-new-list {
+  .board-inner {
+    background: var(--gray-50, $gray-10);
+  }
+
+  .gl-dropdown-inner {
+    max-height: 12rem !important;
+
+    .gl-form-radio {
+      min-height: 1em;
+    }
+  }
+}
+
+.tab-pane-labels {
+  .dropdown-page-one .dropdown-content {
+    height: 140px;
+  }
+
+  .dropdown-page-two {
+    margin-top: 10px;
+
+    .dropdown-content {
+      max-height: initial;
+      height: 205px;
+    }
+  }
+}
+
+.tab-pane-assignees {
+  .dropdown-content {
+    height: 225px;
+    max-height: 252px;
+  }
+}
+
+.board-title-text {
+  margin-right: $gl-padding-8;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.boards-selector-wrapper > .show.dropdown .dropdown-menu {
+  // we cannot use d-flex from Bootstrap because of !important
+  // see https://gitlab.com/gitlab-org/gitlab-ui/issues/38
+  display: flex;
+
+  &.dropdown-extended-height {
+    max-height: $dropdown-max-height-lg;
+  }
+}
+
+.board-config-modal .modal-dialog {
+  width: 440px;
+
+  .block {
+    padding: $gl-padding-8 0;
+
+    // add a border between all items, but not at the start or end
+    + .block {
+      border-top: solid 1px var(--border-color, $border-color);
+    }
+  }
+}
+
+.board-swimlanes {
+  overflow-x: auto;
+
+  .board-swimlanes-content {
+    height: fit-content;
+  }
+
+  .board-add-new-list {
+    height: calc(100% - 1rem);
+  }
+}
+
+.board-epic-lane-container:last-child .board-epic-lane-issues {
+  padding-bottom: $gl-spacing-scale-3;
+}
+
+$epic-icons-spacing: 40px;
+
+.board-epic-lane,
+.swimlanes-button {
+  max-width: calc(100vw - #{$contextual-sidebar-width} - #{$epic-icons-spacing});
+
+  .page-with-icon-sidebar & {
+    max-width: calc(100vw - #{$contextual-sidebar-collapsed-width} - #{$epic-icons-spacing});
+  }
+
+  .page-with-icon-sidebar .is-compact & {
+    max-width: calc(100vw - #{$contextual-sidebar-collapsed-width} - #{$right-sidebar-width} - #{$epic-icons-spacing});
+  }
+
+  .is-compact & {
+    max-width: calc(100vw - #{$contextual-sidebar-width} - #{$right-sidebar-width} - #{$epic-icons-spacing});
+  }
+}
+
+.board-epic-lane-shadow {
+  box-shadow: 0 10px 2px -6px rgba($black, 0.1);
+
+  .gl-dark & {
+    box-shadow: none;
+  }
+}
+
+.board-epic-lane,
+.board-lane-unassigned-issues-title {
+  top: $board-swimlanes-headers-height;
+  background-color: $white;
+  z-index: 2;
+
+  .gl-dark & {
+    background-color: var(--gray-10);
+  }
+}

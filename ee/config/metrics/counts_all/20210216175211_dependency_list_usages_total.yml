@@ -1,0 +1,19 @@
+---
+data_category: optional
+key_path: counts.dependency_list_usages_total
+description: Count to Dependency List page views
+product_section: sec
+product_stage: secure
+product_group: composition_analysis
+value_type: number
+status: removed
+milestone_removed: "14.9"
+time_frame: all
+data_source: redis
+distribution:
+- ee
+tier:
+- ultimate
+performance_indicator_type: []
+milestone: "<13.9"
+removed_by_url:

@@ -1,0 +1,21 @@
+data_category: optional
+key_path: counts.users_visiting_testing_license_compliance_full_report
+description: Total number of clicks on testing_license_compliance_full_report button
+product_section: sec
+product_stage: secure
+product_group: static_analysis
+value_type: number
+status: active
+milestone: '14.7'
+introduced_by_url: https://gitlab.com/gitlab-org/gitlab/-/merge_requests/76917
+time_frame: all
+data_source: redis
+instrumentation_class: RedisMetric
+options:
+  prefix: users
+  event: visiting_testing_license_compliance_full_report
+distribution:
+  - ee
+tier:
+  - premium
+  - ultimate

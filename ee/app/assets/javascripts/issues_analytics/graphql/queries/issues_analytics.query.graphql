@@ -1,0 +1,103 @@
+fragment Issue on Issue {
+  iid
+  title
+  webUrl
+  labels {
+    count
+    nodes {
+      id
+      color
+      title
+      description
+    }
+  }
+  createdAt
+  state
+  epic {
+    iid
+  }
+  milestone {
+    title
+  }
+  iteration {
+    title
+  }
+  weight
+  dueDate
+  assignees {
+    nodes {
+      name
+      webUrl
+      avatarUrl
+    }
+  }
+  author {
+    name
+    webUrl
+    avatarUrl
+  }
+}
+
+query getIssuesAnalyticsTableData(
+  $fullPath: ID!
+  $isGroup: Boolean = false
+  $isProject: Boolean = false
+  $assigneeUsernames: [String!]
+  $authorUsername: String
+  $labelName: [String]
+  $milestoneTitle: [String]
+  $myReactionEmoji: String
+  $epicId: String
+  $weight: String
+  $iterationId: [ID]
+  $state: IssuableState
+  $not: NegatedIssueFilterInput
+  $createdAfter: Time
+  $createdBefore: Time
+) {
+  group(fullPath: $fullPath) @include(if: $isGroup) {
+    id
+    issues(
+      includeSubgroups: true
+      assigneeUsernames: $assigneeUsernames
+      authorUsername: $authorUsername
+      labelName: $labelName
+      milestoneTitle: $milestoneTitle
+      myReactionEmoji: $myReactionEmoji
+      epicId: $epicId
+      weight: $weight
+      iterationId: $iterationId
+      state: $state
+      not: $not
+      createdAfter: $createdAfter
+      createdBefore: $createdBefore
+    ) {
+      count
+      nodes {
+        ...Issue
+      }
+    }
+  }
+  project(fullPath: $fullPath) @include(if: $isProject) {
+    id
+    issues(
+      assigneeUsernames: $assigneeUsernames
+      authorUsername: $authorUsername
+      labelName: $labelName
+      milestoneTitle: $milestoneTitle
+      myReactionEmoji: $myReactionEmoji
+      epicId: $epicId
+      weight: $weight
+      iterationId: $iterationId
+      state: $state
+      not: $not
+      createdAfter: $createdAfter
+      createdBefore: $createdBefore
+    ) {
+      count
+      nodes {
+        ...Issue
+      }
+    }
+  }
+}

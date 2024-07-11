@@ -1,0 +1,326 @@
+- return unless License.feature_available?(:elastic_search)
+
+- add_page_specific_style 'page_bundles/admin/elasticsearch_form'
+- elastic_helper = Gitlab::Elastic::Helper.default
+- elasticsearch_available = elastic_helper.ping?
+- projects_not_indexed_max_shown = EE::Admin::ApplicationSettingsController::UNINDEXED_PROJECT_DISPLAY_LIMIT
+
+%section.settings.as-elasticsearch.no-animate#js-elasticsearch-settings{ class: ('expanded' if expanded_by_default?) }
+  .settings-header
+    %h4.settings-title.js-settings-toggle.js-settings-toggle-trigger-only
+      = _('Advanced Search')
+    = render Pajamas::ButtonComponent.new(button_options: { class: 'js-settings-toggle', data: { testid: 'expand-advanced-search-button' } }) do
+      = expanded_by_default? ? _('Collapse') : _('Expand')
+    %p.gl-text-secondary
+      = _('Configure settings for Advanced Search with Elasticsearch.')
+
+  .settings-content
+    = gitlab_ui_form_for @application_setting, url: advanced_search_admin_application_settings_path(anchor: 'js-elasticsearch-settings'), html: { class: 'fieldset-form' } do |f|
+      = form_errors(@application_setting)
+
+      %fieldset
+        - component_params = { card_options: { class: 'gl-bg-gray-10 gl-mb-6' } }
+        = render Pajamas::CardComponent.new(**component_params) do |c|
+          - c.with_body do
+            - halted_migrations = elasticsearch_available && Elastic::DataMigrationService.halted_migrations?
+            - if halted_migrations
+              = render Pajamas::AlertComponent.new(variant: :warning,
+                title: _('Elasticsearch migration halted'),
+                alert_options: { class: 'gl-my-3' }) do |c|
+                - c.with_body do
+                  = html_escape(_('Check the %{code_open}elasticsearch.log%{code_close} file to debug why the migration halted and make any changes before retrying the migration. When you fix the cause of the failure, select %{strong_open}Retry migration%{strong_close}, and the migration is scheduled to retry in the background.')) % { strong_open: '<strong>'.html_safe, strong_close: '</strong>'.html_safe, code_open: '<code>'.html_safe, code_close: '</code>'.html_safe }
+                  = link_to _('Learn more.'), help_page_path('integration/advanced_search/elasticsearch', anchor: 'advanced-search-migrations')
+                - c.with_actions do
+                  - migration = Elastic::DataMigrationService.halted_migration
+                  = link_button_to _('Retry migration'), admin_elasticsearch_retry_migration_path(version: migration.version), class: 'gl-alert-action', disabled: @last_elasticsearch_reindexing_task&.in_progress?, data: { confirm: _('Are you sure you want to retry this migration?') }, method: :post, variant: :confirm
+
+            .form-group
+              - unless Gitlab::CurrentSettings.elasticsearch_indexing?
+                = f.gitlab_ui_checkbox_component :elasticsearch_indexing, s_('AdminSettings|Elasticsearch indexing'), checkbox_options: { data: { testid: 'indexing-checkbox' } }, help_text: s_('AdminSettings|If there isn\'t any existing index, GitLab creates one.')
+              - if Gitlab::CurrentSettings.elasticsearch_indexing?
+                = f.gitlab_ui_checkbox_component :elasticsearch_indexing, s_('AdminSettings|Elasticsearch indexing'), checkbox_options: { data: { testid: 'indexing-checkbox' } }
+                = render Pajamas::ButtonComponent.new(variant: :confirm, href: admin_elasticsearch_enqueue_index_path, method: :post) do
+                  = _('Index all projects')
+
+            .form-group
+              - first_pending_migration = Elastic::DataMigrationService.pending_migrations.first if elasticsearch_available
+              - pending_migration_running_and_pauses_indexing = first_pending_migration&.running? && first_pending_migration&.pause_indexing?
+              - disable_checkbox = !Gitlab::CurrentSettings.elasticsearch_indexing? || pending_migration_running_and_pauses_indexing || @last_elasticsearch_reindexing_task&.in_progress?
+              = f.gitlab_ui_checkbox_component :elasticsearch_pause_indexing, s_('AdminSettings|Pause Elasticsearch indexing'), checkbox_options: { disabled: disable_checkbox }, help_text: pending_migration_running_and_pauses_indexing ? s_('AdminSettings|There are Advanced Search migrations pending that require indexing to pause. Indexing must remain paused until GitLab completes the migrations.') : s_('AdminSettings|Use for cluster and index migrations. When indexing is paused, GitLab still tracks changes.')
+
+            .form-group
+              = f.gitlab_ui_checkbox_component :elasticsearch_search, s_('AdminSettings|Search with Elasticsearch enabled'), checkbox_options: { data: { testid: 'search-checkbox' } }, help_text: s_('AdminSettings|Disable Elasticsearch until indexing completes.')
+
+            .form-group
+              = f.gitlab_ui_checkbox_component :elasticsearch_requeue_workers, s_('AdminSettings|Requeue indexing workers'), help_text: s_('AdminSettings|Improve non-code indexing throughput by enqueuing Sidekiq jobs until all documents are processed.')
+
+            .form-group
+              = f.label :elasticsearch_url, 'URL', class: 'label-bold'
+              = f.text_field :elasticsearch_url, value: @application_setting.elasticsearch_url.join(', '), class: 'form-control gl-form-input', placeholder: 'http://localhost:9200, http://localhost:9201', data: { testid: 'url-field' }
+              .form-text.gl-text-gray-600.gl-mt-0
+                = _('The URLs for connecting to Elasticsearch. For clustering, add the URLs separated by commas.')
+
+            .form-group
+              = f.label :elasticsearch_username, _('Username'), class: 'label-bold'
+              = f.text_field :elasticsearch_username, value: @application_setting.elasticsearch_username, class: 'form-control gl-form-input', data: { qa_selector: 'username_field' }
+              .form-text.gl-text-gray-600.gl-mt-0
+                = _('Enter the username for password-protected Elasticsearch servers.')
+            .form-group
+              = f.label :elasticsearch_password, _('Password'), class: 'label-bold'
+              = f.password_field :elasticsearch_password, value: (@application_setting.elasticsearch_password.present? ? ApplicationSetting::MASK_PASSWORD : ''), class: 'form-control gl-form-input', data: { qa_selector: 'password_field' }
+              .form-text.gl-text-gray-600.gl-mt-0
+                = _('Enter the password for password-protected Elasticsearch servers.')
+
+            .form-group
+              = f.label :elasticsearch_shards, _('Number of Elasticsearch shards and replicas per index:'), class: 'gl-font-weight-bold'
+
+            %table.table
+              %thead
+                %tr
+                  %th= _('Index')
+                  %th= _('Number of shards')
+                  %th= _('Number of replicas')
+              %tbody
+                - Elastic::IndexSetting.every_alias do |setting|
+                  %tr
+                    %td= setting.alias_name
+                    %td
+                      = f.number_field :elasticsearch_shards, name: "application_setting[elasticsearch_shards][#{setting.alias_name}]", value: setting.number_of_shards, min: 0, class: 'form-control gl-form-input', id: "application_setting_elasticsearch_shards[#{setting.alias_name}]"
+                    %td
+                      = f.number_field :elasticsearch_replicas, name: "application_setting[elasticsearch_replicas][#{setting.alias_name}]", value: setting.number_of_replicas, min: 0, class: 'form-control gl-form-input', id: "application_setting_elasticsearch_replicas[#{setting.alias_name}]"
+            .form-group
+              .form-text.gl-text-gray-600.gl-mt-0
+                - configuration_link_url = help_page_url('integration/advanced_search/elasticsearch', anchor: 'advanced-search-configuration')
+                - configuration_link_start = '<a href="%{url}" target="_blank" rel="noopener noreferrer">'.html_safe % { url: configuration_link_url }
+                - recreated_link_url = help_page_url('integration/advanced_search/elasticsearch', anchor: 'zero-downtime-reindexing')
+                - recreated_link_start = '<a href="%{url}" target="_blank" rel="noopener noreferrer">'.html_safe % { url: recreated_link_url }
+                = html_escape(_("Learn more about shards and replicas in the %{configuration_link_start}Advanced Search configuration%{configuration_link_end} documentation. Changes don't take place until you %{recreated_link_start}recreate%{recreated_link_end} the index.")) % { configuration_link_start: configuration_link_start, configuration_link_end: '</a>'.html_safe, recreated_link_start: recreated_link_start, recreated_link_end: '</a>'.html_safe }
+
+            .form-group
+              = f.label :elasticsearch_worker_number_of_shards, _('Number of shards for non-code indexing'), class: 'label-bold'
+              = f.number_field :elasticsearch_worker_number_of_shards, value: @application_setting.elasticsearch_worker_number_of_shards, max: Elastic::ProcessBookkeepingService::SHARDS_MAX, class: 'form-control gl-form-input'
+              .form-text.gl-text-gray-600.gl-mt-0
+                = _('Improve indexing performance by increasing Sidekiq load. Values greater than the current shard limit (%{limit}) are not allowed.') % { limit: Elastic::ProcessBookkeepingService::SHARDS_MAX }
+
+            .form-group
+              = f.label :elasticsearch_indexed_file_size_limit_kb, _('Maximum file size indexed (KiB)'), class: 'label-bold'
+              = f.number_field :elasticsearch_indexed_file_size_limit_kb, value: @application_setting.elasticsearch_indexed_file_size_limit_kb, class: 'form-control gl-form-input'
+              .form-text.gl-text-gray-600.gl-mt-0
+                = _('For files larger than this limit, only index the file name. The file content is neither indexed nor searchable.')
+
+            .form-group
+              = f.label :elasticsearch_indexed_field_length_limit, _('Maximum field length'), class: 'label-bold'
+              = f.number_field :elasticsearch_indexed_field_length_limit, value: @application_setting.elasticsearch_indexed_field_length_limit, class: 'form-control gl-form-input'
+              .form-text.gl-text-gray-600.gl-mt-0
+                = _('If any indexed field exceeds this limit, it is truncated to this number of characters. The rest of the content is neither indexed nor searchable. This does not apply to repository and wiki indexing. For unlimited characters, set this to 0.')
+
+            .form-group
+              = f.label :elasticsearch_max_bulk_size_mb, _('Maximum bulk request size (MiB)'), class: 'label-bold'
+              = f.number_field :elasticsearch_max_bulk_size_mb, value: @application_setting.elasticsearch_max_bulk_size_mb, class: 'form-control gl-form-input'
+              .form-text.gl-text-gray-600.gl-mt-0
+                = _('Maximum size of Elasticsearch bulk indexing requests.')
+
+            .form-group
+              = f.label :elasticsearch_max_bulk_concurrency, _('Bulk request concurrency'), class: 'label-bold'
+              = f.number_field :elasticsearch_max_bulk_concurrency, value: @application_setting.elasticsearch_max_bulk_concurrency, class: 'form-control gl-form-input'
+              .form-text.gl-text-gray-600.gl-mt-0
+                = _('Maximum concurrency of Elasticsearch bulk requests per indexing operation.')
+                = _('This only applies to repository indexing operations.')
+
+            .form-group
+              = f.label :elasticsearch_client_request_timeout, _('Client request timeout'), class: 'label-bold'
+              = f.number_field :elasticsearch_client_request_timeout, value: @application_setting.elasticsearch_client_request_timeout, class: 'form-control gl-form-input'
+              .form-text.gl-text-gray-600.gl-mt-0
+                = _('Elasticsearch HTTP client timeout value in seconds.')
+                = _('To use the system\'s default, set this value to 0.')
+
+        = render Pajamas::CardComponent.new(**component_params) do |c|
+          - c.with_body do
+            %h4= _('Elasticsearch indexing restrictions')
+            .form-group
+              = f.gitlab_ui_checkbox_component :elasticsearch_limit_indexing, s_('AdminSettings|Limit the number of namespaces and projects that can be indexed.'), checkbox_options: { class: 'js-limit-checkbox' }
+
+            .form-group.js-limit-namespaces{ class: ('hidden' unless @application_setting.elasticsearch_limit_indexing) }
+              = f.label :elasticsearch_namespace_ids, _('Namespaces to index'), class: 'label-bold'
+              - if elasticsearch_too_many_namespaces?
+                %p= _('Too many namespaces enabled. Manage them through the console or the API.')
+              - else
+                .js-namespaces-indexing-restrictions{ data: { selected: elasticsearch_objects_options(@application_setting.elasticsearch_limited_namespaces(true)).to_json } }
+
+            .form-group.js-limit-projects{ class: ('hidden' unless @application_setting.elasticsearch_limit_indexing) }
+              = f.label :elasticsearch_project_ids, _('Projects to index'), class: 'label-bold'
+              - if elasticsearch_too_many_projects?
+                %p= _('Too many projects enabled. Manage them through the console or the API.')
+              - else
+                .js-projects-indexing-restrictions{ data: { selected: elasticsearch_objects_options(@application_setting.elasticsearch_limited_projects(true)).to_json } }
+
+        = render Pajamas::CardComponent.new(**component_params) do |c|
+          - c.with_body do
+            %h4= _('Custom analyzers: language support')
+            %h5
+              = _('Chinese language support using')
+              %a{ href: 'https://www.elastic.co/guide/en/elasticsearch/plugins/current/analysis-smartcn.html' }
+                = _('smartcn custom analyzer')
+            .form-group
+              = f.gitlab_ui_checkbox_component :elasticsearch_analyzers_smartcn_enabled, s_('AdminSettings|Enable smartcn custom analyzer: Indexing')
+            .form-group
+              = f.gitlab_ui_checkbox_component :elasticsearch_analyzers_smartcn_search, s_('AdminSettings|Enable smartcn custom analyzer: Search'), checkbox_options: { disabled: !Gitlab::CurrentSettings.elasticsearch_analyzers_smartcn_enabled? }, help_text: s_('AdminSettings|Only enable search after installing the plugin, enabling indexing, and recreating the index.')
+
+            %h5
+              = _('Japanese language support using')
+              %a{ href: 'https://www.elastic.co/guide/en/elasticsearch/plugins/current/analysis-kuromoji.html' }
+                = _('kuromoji custom analyzer')
+            .form-group
+              = f.gitlab_ui_checkbox_component :elasticsearch_analyzers_kuromoji_enabled, s_('AdminSettings|Enable kuromoji custom analyzer: Indexing')
+            .form-group
+              = f.gitlab_ui_checkbox_component :elasticsearch_analyzers_kuromoji_search, s_('AdminSettings|Enable kuromoji custom analyzer: Search'), checkbox_options: { disabled: !Gitlab::CurrentSettings.elasticsearch_analyzers_kuromoji_enabled? }, help_text: s_('AdminSettings|Only enable search after installing the plugin, enabling indexing, and recreating the index.')
+
+        = render Pajamas::CardComponent.new(**component_params) do |c|
+          - c.with_body do
+            %h4= _('AWS OpenSearch IAM credentials')
+            .form-group
+              = f.gitlab_ui_checkbox_component :elasticsearch_aws, s_('AdminSettings|Use AWS OpenSearch Service with IAM credentials')
+            .form-group
+              = f.label :elasticsearch_aws_region, 'AWS region', class: 'label-bold'
+              = f.text_field :elasticsearch_aws_region, value: @application_setting.elasticsearch_aws_region, class: 'form-control gl-form-input'
+              .form-text.gl-text-gray-600.gl-mt-0
+                = _('OpenSearch\'s region.')
+
+            .form-group
+              = f.label :elasticsearch_aws_access_key, _('AWS Access Key'), class: 'label-bold'
+              = f.text_field :elasticsearch_aws_access_key, value: @application_setting.elasticsearch_aws_access_key, class: 'form-control gl-form-input'
+              .form-text.gl-text-gray-600.gl-mt-0
+                = _('Required only if you are not using role instance credentials.')
+
+            - secret_access_key_label = @application_setting.elasticsearch_aws_secret_access_key.present? ? _('Enter new AWS Secret Access Key') : _('AWS Secret Access Key')
+            - secret_access_key_value = @application_setting.elasticsearch_aws_secret_access_key.present? ? ApplicationSetting::MASK_PASSWORD : ''
+            .form-group
+              = f.label :elasticsearch_aws_secret_access_key, secret_access_key_label, class: 'label-bold'
+              = f.password_field :elasticsearch_aws_secret_access_key, value: secret_access_key_value, autocomplete: 'new-password', class: 'form-control gl-form-input'
+              .form-text.gl-text-gray-600.gl-mt-0
+                = _('Required only if you are not using role instance credentials.')
+
+      = f.submit _('Save changes'), data: { testid: 'submit-button' }, pajamas_button: true
+
+%section.settings.as-elasticsearch-reindexing.no-animate#js-elasticsearch-reindexing{ class: ('expanded' if expanded_by_default?) }
+  .settings-header
+    %h4.settings-title.js-settings-toggle.js-settings-toggle-trigger-only
+      = _('Elasticsearch zero-downtime reindexing')
+    = render Pajamas::ButtonComponent.new(button_options: { class: 'js-settings-toggle' }) do
+      = expanded_by_default? ? _('Collapse') : _('Expand')
+    %p.gl-text-secondary
+      = _('Trigger cluster reindexing. Only use this with an index that was created in GitLab 13.0 or later.')
+
+  .settings-content
+    = gitlab_ui_form_for @elasticsearch_reindexing_task, url: admin_elasticsearch_trigger_reindexing_path, method: :post, html: { class: 'fieldset-form' } do |f|
+      %fieldset
+        .form-group
+          = f.label :slice_multiplier, _('Slice multiplier'), class: 'label-bold'
+          = f.number_field :elasticsearch_slice_multiplier, class: 'form-control gl-form-input', value: @elasticsearch_reindexing_task.slice_multiplier
+          .form-text.gl-text-gray-600.gl-mt-0
+            - slice_multiplier_link_url = help_page_path('integration/advanced_search/elasticsearch', anchor: 'slice-multiplier')
+            - slice_multiplier_link_start = '<a href="%{url}" target="_blank" rel="noopener noreferrer">'.html_safe % { url: slice_multiplier_link_url }
+            = html_escape(_('Calculate the number of slices during reindexing. The multiplier is applied to the number of shards per index. Learn more about %{slice_multiplier_link_start}slice multiplier configuration%{slice_multiplier_link_end}.')) % { slice_multiplier_link_start: slice_multiplier_link_start, slice_multiplier_link_end: '</a>'.html_safe }
+
+        .form-group
+          = f.label :max_slices_running, _('Maximum running slices'), class: 'label-bold'
+          = f.number_field :elasticsearch_max_slices_running, class: 'form-control gl-form-input', value: @elasticsearch_reindexing_task.max_slices_running
+          .form-text.gl-text-gray-600.gl-mt-0
+            - max_slices_running_link_url = help_page_path('integration/advanced_search/elasticsearch', anchor: 'maximum-running-slices')
+            - max_slices_running_link_start = '<a href="%{url}" target="_blank" rel="noopener noreferrer">'.html_safe % { url: max_slices_running_link_url }
+            = html_escape(_('Set the maximum number of slices allowed to run concurrently during Elasticsearch reindexing. Learn more about %{max_slices_running_link_start}maximum running slices configuration%{max_slices_link_end}.')) % { max_slices_running_link_start: max_slices_running_link_start, max_slices_link_end: '</a>'.html_safe }
+
+        = f.submit _('Trigger cluster reindexing'), pajamas_button: true, disabled: @last_elasticsearch_reindexing_task&.in_progress?, data: { confirm: _('Are you sure you want to reindex?') }
+        .form-text.gl-text-gray-600
+        - Elastic::ReindexingTask.old_indices_scheduled_for_deletion.each do |task|
+          .form-text.gl-text-red-500.gl-mt-0
+            = _("Unused, previous indices: %{index_names} will be deleted after %{time} automatically.") % { index_names: task.subtasks.map(&:index_name_from).join(', '), time: task.delete_original_index_at }
+            = link_to _('Cancel index deletion'), admin_elasticsearch_cancel_index_deletion_path(task_id: task.id), class: 'gl-mb-2', method: :post
+        - if @last_elasticsearch_reindexing_task
+          %h5= _('Reindexing Status: %{status} (Slice multiplier: %{multiplier}, Maximum running slices: %{max_slices})') % { status: @last_elasticsearch_reindexing_task.state, max_slices: @last_elasticsearch_reindexing_task.max_slices_running, multiplier: @last_elasticsearch_reindexing_task.slice_multiplier }
+          - if @last_elasticsearch_reindexing_task.error_message
+            %p= _('Error: %{error_message}') % { error_message: @last_elasticsearch_reindexing_task.error_message }
+          - @last_elasticsearch_reindexing_task.subtasks.order_by_alias_name_asc.each do |subtask|
+            .gl-card-body.form-group
+              %h5= subtask.alias_name
+              - expected_documents = subtask.documents_count
+              - if subtask.elastic_task
+                %p= _('Task ID: %{elastic_task}') % { elastic_task: subtask.elastic_task }
+              - if expected_documents
+                - processed_documents = subtask.documents_count_target
+                %p= _('Expected documents: %{expected_documents}') % { expected_documents: expected_documents }
+                - if processed_documents && expected_documents
+                  - percentage = expected_documents > 0 ? ((processed_documents / expected_documents.to_f) * 100).round(2) : 100
+                  %p= _('Documents reindexed: %{processed_documents} (%{percentage}%%)') % { processed_documents: processed_documents, percentage: percentage }
+                  .progress
+                    .progress-bar{ "aria-valuemax" => "100", "aria-valuemin" => "0", "aria-valuenow" => percentage, :role => "progressbar", :style => "width: #{percentage}%" }
+%section.settings.no-animate#js-indexing-status{ class: ('expanded' if expanded_by_default?) }
+  .settings-header
+    %h4.settings-title.js-settings-toggle.js-settings-toggle-trigger-only
+      = _('Indexing status')
+    = render Pajamas::ButtonComponent.new(button_options: { class: 'js-settings-toggle' }) do
+      = expanded_by_default? ? _('Collapse') : _('Expand')
+    %p.gl-text-secondary
+      = _('Show current status of indexing')
+
+  .settings-content
+    - component_params = { body_options: { class: 'gl-display-flex gl-justify-content-space-between gl-align-items-center gl-p-6' }}
+    .row
+      .col-md-6.gl-mb-6
+        = render Pajamas::CardComponent.new(**component_params) do |c|
+          - c.with_body do
+            .gl-display-flex.gl-flex-direction-column
+              .gl-display-flex.gl-align-items-center
+                = sprite_icon('clock', size: 16, css_class: 'gl-text-gray-700')
+                .gl-font-size-h1.gl-font-weight-bold.gl-m-0.gl-ml-3{ data: { testid: 'initial_queue_size' } }
+                  = @initial_queue_size
+              .gl-mt-3.gl-text-transform-uppercase
+                = s_('GlobalSearch|Initial indexing queue length')
+            = render Pajamas::ButtonComponent.new(href: help_page_path('integration/advanced_search/elasticsearch_troubleshooting.md'), button_options: { data: { testid: 'initial_indexing_documentation' } }) do
+              = s_('AdminArea|Documentation')
+      .col-md-6.gl-mb-6
+        = render Pajamas::CardComponent.new(**component_params) do |c|
+          - c.with_body do
+            .gl-display-flex.gl-flex-direction-column
+              .gl-display-flex.gl-align-items-center
+                = sprite_icon('retry', size: 16, css_class: 'gl-text-gray-700')
+                .gl-font-size-h1.gl-font-weight-bold.gl-m-0.gl-ml-3{ data: { testid: 'incremental_queue_size' } }
+                  = @incremental_queue_size
+              .gl-mt-3.gl-text-transform-uppercase
+                = s_('GlobalSearch|Incremental indexing queue length')
+            = render Pajamas::ButtonComponent.new(href: help_page_path('integration/advanced_search/elasticsearch_troubleshooting.md'), button_options: { data: { testid: 'incremental_indexing_documentation' } }) do
+              = s_('AdminArea|Documentation')
+    - unless ::Gitlab::Saas.feature_available?(:search_indexing_status)
+      .row
+        .col-12
+          = render Pajamas::CardComponent.new(**component_params) do |c|
+            - c.with_body do
+              .gl-display-flex.gl-flex-direction-column
+                .gl-display-flex.gl-align-items-center
+                  = sprite_icon('project', size: 16, css_class: 'gl-text-gray-700')
+                  .gl-font-size-h1.gl-font-weight-bold.gl-m-0.gl-ml-3{ data: { testid: 'projects_not_indexed_size' } }
+                    = @projects_not_indexed_count
+                .gl-mt-3.gl-text-transform-uppercase
+                  = s_('GlobalSearch|projects not indexed')
+            - if @projects_not_indexed_count > 0
+              - c.with_footer do
+                .indexing-projects-list
+                  %ul.content-list
+                    - @projects_not_indexed.each do |project|
+                      %li.project-row.gl-align-items-center{ class: 'gl-display-flex!', data: { testid: 'not_indexed_project_row'} }
+                        = render Pajamas::AvatarComponent.new(project, size: 32, alt: '')
+                        .gl-min-w-0.gl-flex-grow-1.gl-ml-3
+                          .title
+                            = link_to(admin_project_path(project)) do
+                              - if project.namespace
+                                = project.namespace.human_name
+                                \/
+                              = project.name
+                          - if project.description.present?
+                            .description
+                              = markdown_field(project, :description)
+                        .stats.gl-text-gray-500.gl-flex-shrink-0.gl-display-none.gl-sm-display-flex
+                          = gl_badge_tag _('Created %{date} ago') % { date: time_ago_in_words(project.created_at) }
+                  - if @projects_not_indexed_count > projects_not_indexed_max_shown
+                    %li.project-row.gl-align-items-center{ class: 'gl-display-flex!', data: { testid: 'projects_not_indexed_max_shown'} }
+                      = s_('GlobalSearch|Only first %{max_shown} of not indexed projects is shown') % { max_shown: projects_not_indexed_max_shown }

@@ -1,0 +1,31 @@
+---
+data_category: operational
+key_path: counts_monthly.aggregated_metrics.compliance_features_track_unique_visits_union
+description: Unique users that have used audit event screen, audit event API, compliance
+  dashboard, or credential inventory
+product_section: sec
+product_stage: govern
+product_group: compliance
+value_type: number
+status: active
+time_frame: 28d
+instrumentation_class: AggregatedMetric
+data_source: redis_hll
+options:
+  aggregate:
+    operator: OR
+    attribute: user_id
+  events:
+    - 'g_compliance_audit_events'
+    - 'g_compliance_dashboard'
+    - 'i_compliance_audit_events'
+    - 'a_compliance_audit_events_api'
+    - 'i_compliance_credential_inventory'
+distribution:
+- ee
+tier:
+- premium
+- ultimate
+performance_indicator_type:
+- customer_health_score
+milestone: "<13.9"

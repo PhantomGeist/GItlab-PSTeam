@@ -1,0 +1,61 @@
+#import "~/graphql_shared/fragments/page_info.fragment.graphql"
+#import "../fragments/vulnerability_location.fragment.graphql"
+
+query pipelineFindings(
+  $fullPath: ID!
+  $pipelineId: ID!
+  $first: Int
+  $last: Int
+  $before: String
+  $after: String
+  $severity: [String!]
+  $reportType: [String!]
+  $scanner: [String!]
+  $state: [VulnerabilityState!]
+  $vetEnabled: Boolean = false
+) {
+  project(fullPath: $fullPath) {
+    id
+    pipeline(iid: $pipelineId) {
+      id
+      securityReportFindings(
+        before: $before
+        after: $after
+        first: $first
+        last: $last
+        severity: $severity
+        reportType: $reportType
+        scanner: $scanner
+        state: $state
+      ) {
+        nodes {
+          # This query is used by vulnerability_list_graphql.vue, which expects an id property for
+          # the bulk select feature.
+          id: uuid
+          # Removed in https://gitlab.com/gitlab-org/gitlab/-/merge_requests/119055
+          name: title
+          description
+          falsePositive @include(if: $vetEnabled)
+          identifiers {
+            externalType
+            name
+          }
+          reportType
+          scanner {
+            id
+            vendor
+          }
+          state
+          severity
+          solution
+          location {
+            ...VulnerabilityLocation
+          }
+        }
+        pageInfo {
+          ...PageInfo
+        }
+      }
+    }
+  }
+}

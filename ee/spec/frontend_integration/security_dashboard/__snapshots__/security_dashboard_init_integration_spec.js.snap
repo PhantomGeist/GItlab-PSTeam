@@ -1,0 +1,273 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Security Dashboard default states sets up group-level 1`] = `
+<div>
+  <div>
+    <h2
+      class="gl-mb-6"
+    >
+      Security dashboard
+    </h2>
+    <div
+      class="gl-display-grid security-charts"
+    >
+      <section
+        class="gl-border-1 gl-border-gray-100 gl-border-solid gl-display-flex gl-flex-direction-column gl-rounded-base"
+      >
+        <header
+          class="gl-p-5"
+        >
+          <h4
+            class="gl-mb-3 gl-mt-0"
+            data-testid="title"
+          >
+            Vulnerabilities over time
+          </h4>
+          <p
+            class="gl-m-0 gl-text-secondary"
+            data-testid="help-text"
+          >
+            June 6th to today
+          </p>
+          <div
+            class="gl-mt-5"
+            data-testid="controls"
+          >
+            <div
+              class="btn-group gl-display-flex"
+              role="group"
+            >
+              <button
+                class="btn btn-default btn-md gl-button selected"
+                type="button"
+              >
+                <span
+                  class="gl-button-text"
+                >
+                  30 Days
+                </span>
+              </button>
+              <button
+                class="btn btn-default btn-md gl-button"
+                type="button"
+              >
+                <span
+                  class="gl-button-text"
+                >
+                  60 Days
+                </span>
+              </button>
+              <button
+                class="btn btn-default btn-md gl-button"
+                type="button"
+              >
+                <span
+                  class="gl-button-text"
+                >
+                  90 Days
+                </span>
+              </button>
+            </div>
+          </div>
+        </header>
+        <div
+          class="gl-my-12 gl-spinner-container"
+          role="status"
+        >
+          <span
+            aria-label="Loading"
+            class="gl-spinner gl-spinner-dark gl-spinner-lg gl-vertical-align-text-bottom!"
+          />
+        </div>
+      </section>
+      <section
+        class="gl-border-1 gl-border-gray-100 gl-border-solid gl-display-flex gl-flex-direction-column gl-rounded-base"
+      >
+        <header
+          class="gl-p-5"
+        >
+          <h4
+            class="gl-mb-3 gl-mt-0"
+            data-testid="title"
+          >
+            Project security status
+          </h4>
+          <p
+            class="gl-m-0 gl-text-secondary"
+            data-testid="help-text"
+          />
+        </header>
+        <div
+          class="gl-my-12 gl-spinner-container"
+          role="status"
+        >
+          <span
+            aria-label="Loading"
+            class="gl-spinner gl-spinner-dark gl-spinner-lg gl-vertical-align-text-bottom!"
+          />
+        </div>
+      </section>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Security Dashboard default states sets up instance-level 1`] = `
+<div>
+  <div>
+    <h2
+      class="gl-mb-6"
+    >
+      Security dashboard
+    </h2>
+    <div
+      class="gl-display-grid security-charts"
+    >
+      <section
+        class="gl-border-1 gl-border-gray-100 gl-border-solid gl-display-flex gl-flex-direction-column gl-rounded-base"
+      >
+        <header
+          class="gl-p-5"
+        >
+          <h4
+            class="gl-mb-3 gl-mt-0"
+            data-testid="title"
+          >
+            Vulnerabilities over time
+          </h4>
+          <p
+            class="gl-m-0 gl-text-secondary"
+            data-testid="help-text"
+          >
+            June 6th to today
+          </p>
+          <div
+            class="gl-mt-5"
+            data-testid="controls"
+          >
+            <div
+              class="btn-group gl-display-flex"
+              role="group"
+            >
+              <button
+                class="btn btn-default btn-md gl-button selected"
+                type="button"
+              >
+                <span
+                  class="gl-button-text"
+                >
+                  30 Days
+                </span>
+              </button>
+              <button
+                class="btn btn-default btn-md gl-button"
+                type="button"
+              >
+                <span
+                  class="gl-button-text"
+                >
+                  60 Days
+                </span>
+              </button>
+              <button
+                class="btn btn-default btn-md gl-button"
+                type="button"
+              >
+                <span
+                  class="gl-button-text"
+                >
+                  90 Days
+                </span>
+              </button>
+            </div>
+          </div>
+        </header>
+        <div
+          class="gl-my-12 gl-spinner-container"
+          role="status"
+        >
+          <span
+            aria-label="Loading"
+            class="gl-spinner gl-spinner-dark gl-spinner-lg gl-vertical-align-text-bottom!"
+          />
+        </div>
+      </section>
+      <section
+        class="gl-border-1 gl-border-gray-100 gl-border-solid gl-display-flex gl-flex-direction-column gl-rounded-base"
+      >
+        <header
+          class="gl-p-5"
+        >
+          <h4
+            class="gl-mb-3 gl-mt-0"
+            data-testid="title"
+          >
+            Project security status
+          </h4>
+          <p
+            class="gl-m-0 gl-text-secondary"
+            data-testid="help-text"
+          />
+        </header>
+        <div
+          class="gl-my-12 gl-spinner-container"
+          role="status"
+        >
+          <span
+            aria-label="Loading"
+            class="gl-spinner gl-spinner-dark gl-spinner-lg gl-vertical-align-text-bottom!"
+          />
+        </div>
+      </section>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Security Dashboard error states has unavailable pages 1`] = `
+<div>
+  <section
+    class="gl-display-flex gl-empty-state gl-flex-direction-column gl-text-center"
+  >
+    <div
+      class="gl-max-w-full"
+    >
+      <img
+        alt=""
+        class="gl-dark-invert-keep-hue gl-max-w-full"
+        role="img"
+        src="/test/empty_state.svg"
+      />
+    </div>
+    <div
+      class="gl-empty-state-content gl-m-auto gl-mx-auto gl-my-0 gl-p-5"
+      data-testid="gl-empty-state-content"
+    >
+      <h1
+        class="gl-font-size-h-display gl-line-height-36 gl-mb-0 gl-mt-0 h4"
+      >
+        Oops, something doesn't seem right.
+      </h1>
+      <p
+        class="gl-mb-0 gl-mt-4"
+      >
+        Either you don't have permission to view this dashboard or the dashboard has not been setup. Please check your permission settings with your administrator or check your dashboard configurations to proceed.
+      </p>
+      <div
+        class="gl-display-flex gl-flex-wrap gl-justify-content-center gl-mt-5"
+      >
+        <a
+          class="btn btn-confirm btn-md gl-button gl-mb-3 gl-mx-2"
+          href="/help/user/application_security/configuration/index"
+        >
+          <span
+            class="gl-button-text"
+          >
+            Learn more about setting up your dashboard
+          </span>
+        </a>
+      </div>
+    </div>
+  </section>
+</div>
+`;

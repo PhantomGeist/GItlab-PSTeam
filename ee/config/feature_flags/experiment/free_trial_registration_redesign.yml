@@ -1,0 +1,8 @@
+---
+name: free_trial_registration_redesign
+introduced_by_url: https://gitlab.com/gitlab-org/gitlab/-/merge_requests/121269
+rollout_issue_url: https://gitlab.com/gitlab-org/gitlab/-/issues/425215
+milestone: '16.6'
+type: experiment
+group: group::acquisition
+default_enabled: false

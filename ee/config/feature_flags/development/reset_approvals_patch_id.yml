@@ -1,0 +1,8 @@
+---
+name: reset_approvals_patch_id
+introduced_by_url: https://gitlab.com/gitlab-org/gitlab/-/merge_requests/132000
+rollout_issue_url: https://gitlab.com/gitlab-org/gitlab/-/issues/426874
+milestone: '16.5'
+type: development
+group: group::code review
+default_enabled: false

@@ -1,0 +1,31 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "List of licenses associated with an SBOM occurrence",
+  "type": "array",
+  "items": [
+    {
+      "type": "object",
+      "properties": {
+        "spdx_identifier": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 50
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "url": {
+          "type": "string",
+          "format": "uri"
+        }
+      },
+      "required": [
+        "spdx_identifier",
+        "name",
+        "url"
+      ],
+      "additionalProperties": false
+    }
+  ]
+}

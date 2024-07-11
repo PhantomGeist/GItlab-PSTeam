@@ -1,0 +1,13 @@
+- page_title _('Checkout')
+- content_for :page_specific_javascripts do
+  = render "layouts/google_tag_manager_head"
+  = render "layouts/one_trust"
+= render "layouts/google_tag_manager_body"
+= render "layouts/published_experiments"
+
+- Gitlab::Tracking.event(body_data_page, 'render',
+                         label: 'saas_checkout',
+                         user: current_user,
+                         namespace: @namespace)
+
+#js-new-subscription{ data: subscription_data(@eligible_groups) }

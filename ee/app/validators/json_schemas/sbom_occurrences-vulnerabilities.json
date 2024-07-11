@@ -1,0 +1,41 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "List of vulnerabilities associated with an SBOM occurrence",
+  "type": "array",
+  "items": [
+    {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer"
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "url": {
+          "type": "string",
+          "format": "uri"
+        },
+        "severity": {
+          "type": "string",
+          "enum": [
+            "info",
+            "unknown",
+            "low",
+            "medium",
+            "high",
+            "critical"
+          ]
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "url",
+        "severity"
+      ],
+      "additionalProperties": false
+    }
+  ]
+}

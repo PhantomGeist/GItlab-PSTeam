@@ -1,0 +1,41 @@
+- page_title _("Billing")
+- add_page_specific_style 'page_bundles/billings', defer: false
+- read_only = !can_edit_billing?(@group)
+
+= render_if_exists 'shared/thanks_for_purchase_alert', plan_title: plan_title, quantity: params[:purchased_quantity].to_i
+= render 'shared/qrtly_reconciliation_alert', group: @group
+
+- if @top_level_group # we are in subgroup mode
+  - current_plan = subscription_plan_info(@plans_data, @top_level_group.actual_plan_name)
+  = render 'subgroup_billing_plan_header',
+    namespace: @group,
+    current_plan: current_plan,
+    top_level_group: @top_level_group
+- else
+  = content_for :flash_message do
+    = render 'shared/billings/eoa_bronze_plan_banner', namespace: @group, eoa_bronze_plan_end_date: eoa_bronze_plan_end_date
+
+  - current_plan = subscription_plan_info(@plans_data, @group.actual_plan_name)
+
+  - if @group.paid?
+    - if current_plan
+      = render 'top_level_billing_plan_header', namespace: @group, current_plan: current_plan
+
+    = render 'shared/billings/billing_plans', plans_data: @plans_data, namespace: @group, current_plan: current_plan, read_only: read_only
+    - if show_code_suggestions_card?(@group)
+      = render Pajamas::CardComponent.new do |c|
+        - c.with_body do
+          %h5
+            = sprite_icon('tanuki-ai', css_class: 'gl-mr-2')
+            = s_('CodeSuggestions|Introducing the Code Suggestions add-on')
+          %p
+            - docs_link_url = help_page_path('user/project/repository/code_suggestions/index')
+            - docs_link = link_to('', docs_link_url, target: '_blank', rel: 'noopener noreferrer')
+            = safe_format(s_('CodeSuggestions|Enhance your coding experience with intelligent recommendations. %{linkStart}Code Suggestions%{linkEnd} uses generative AI to suggest code while you\'re developing.'),
+              tag_pair(docs_link, :linkStart, :linkEnd))
+          .js-hand-raise-lead-button{ data: code_suggestions_hand_raise_props(@group) }
+
+    - data_attributes = subscription_plan_data_attributes(@group, current_plan, read_only: read_only)
+    #js-billing-plans{ data: data_attributes }
+  - else
+    = render 'free_plan_billing_index', plans_data: @plans_data, namespace: @group, current_plan: current_plan

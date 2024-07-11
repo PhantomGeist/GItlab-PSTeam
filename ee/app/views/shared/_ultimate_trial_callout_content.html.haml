@@ -1,0 +1,24 @@
+- is_dismissable = local_assigns.fetch(:is_dismissable, true)
+- callout = local_assigns.fetch(:callout, Users::CalloutsHelper::ULTIMATE_TRIAL)
+- button_css_class = is_dismissable ? 'mr-3' : ''
+- banner_title = 'ultimate_banner'
+
+.gl-display-none.gl-md-display-block.container-limited{ class: 'gl-pt-6! gl-pb-2!', data: { track_action: 'render', track_label: banner_title } }
+  .user-callout.promotion-callout.js-gold-trial-callout{ class: 'gl-mt-0! gl-mx-0', data: { uid: 'trial_callout_dismissed', feature_id: callout, dismiss_endpoint: callouts_path } }
+    = render Pajamas::CardComponent.new(card_options: { class: 'gl-px-8 gl-py-6' },
+                                          body_options: { class: 'gl-display-flex gl-p-0!'}) do |c|
+      - c.with_body do
+        .gl-banner-illustration
+          = image_tag 'illustrations/golden_tanuki.svg', class: 'svg gl-w-8!'
+        .gl-banner-content
+          %h1.gl-banner-title= _('Free Trial of GitLab.com Ultimate')
+          %p
+            %span= _('Try all GitLab has to offer for 30 days.')
+            %span.d-none.d-sm-inline= _('No credit card required.')
+          = link_button_to _('Start your free trial'), new_trial_path(glm_source: glm_source, glm_content: 'gold-callout'), class: "mt-2 mt-sm-0 #{button_css_class}", target: '_blank', rel: 'noopener noreferrer', data: { track_action: 'click_button', track_label: 'start_your_trial', track_property: banner_title }, variant: :confirm
+        - if is_dismissable
+          = render Pajamas::ButtonComponent.new(category: :tertiary,
+            icon: 'close',
+            size: :small,
+            button_options: { class: 'close js-close gl-opacity-10!', 'aria-label': _('Dismiss trial promotion'), data: { track_action: 'dismiss_banner', track_label: banner_title } },
+            icon_classes: 'dismiss-icon gl-text-gray-700!')

@@ -1,0 +1,21 @@
+#import "~/graphql_shared/fragments/issue.fragment.graphql"
+
+fragment Issue on Issue {
+  ...IssueNode
+  id
+  weight
+  blocked
+  blockedByCount
+  epic {
+    id
+  }
+  iteration {
+    id
+    title
+    iterationCadence {
+      id
+      title
+    }
+  }
+  healthStatus
+}

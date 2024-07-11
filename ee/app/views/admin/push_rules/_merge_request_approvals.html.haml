@@ -1,0 +1,19 @@
+- return unless License.feature_available?(:admin_merge_request_approvers_rules)
+%section.settings.no-animate#js-merge-request-approval-settings{ class: ('expanded' if expanded_by_default?), data: { testid: 'merge-request-approval-settings' } }
+  .settings-header
+    %h4.settings-title.js-settings-toggle.js-settings-toggle-trigger-only
+      = _('Merge request approvals')
+    = render Pajamas::ButtonComponent.new(button_options: { class: 'js-settings-toggle' }) do
+      = expanded_by_default? ? _('Collapse') : _('Expand')
+    %p
+      - link = link_to('', help_page_path('user/compliance/compliance_center/index', anchor: 'separation-of-duties'), target: '_blank', rel: 'noopener noreferrer')
+      = safe_format(s_('MergeRequestApprovals|Enforce %{link_start}separation of duties%{link_end} for all projects.'), tag_pair(link, :link_start, :link_end))
+      = link_to _("Learn more."), help_page_path("user/project/merge_requests/approvals/index.md"), target: '_blank', rel: 'noopener noreferrer'
+
+  .settings-content
+    = gitlab_ui_form_for @application_setting, url: general_admin_application_settings_path(anchor: 'js-merge-request-approval-settings'), html: { class: 'fieldset-form' } do |f|
+      = form_errors(@application_setting)
+
+      = render 'merge_request_approvals_fields', f: f
+
+      = f.submit _('Save changes'), pajamas_button: true

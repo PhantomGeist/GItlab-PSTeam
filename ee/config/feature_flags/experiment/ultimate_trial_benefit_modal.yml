@@ -1,0 +1,8 @@
+---
+name: ultimate_trial_benefit_modal
+introduced_by_url: https://gitlab.com/gitlab-org/gitlab/-/merge_requests/132660
+rollout_issue_url: https://gitlab.com/gitlab-org/gitlab/-/issues/428652
+milestone: '16.5'
+type: experiment
+group: group::activation
+default_enabled: false

@@ -1,0 +1,18 @@
+%li
+  .float-right
+    = link_button_to group_ldap_group_link_path(group, ldap_group_link), method: :delete, variant: :danger, size: :small, icon: 'unlink' do
+      = _('Remove')
+  %strong= ldap_group_link.cn ? "Group: #{ldap_group_link.cn}" : "Filter: #{truncate(ldap_group_link.filter, length: 70)}"
+
+  - if ldap_group_link.config
+    .light
+      As #{ldap_group_link.human_access} on #{ldap_group_link.provider_label} server
+  - else
+    .cred
+      = sprite_icon('warning-solid')
+      Config for LDAP server
+      %code= ldap_group_link.provider
+      is not present in GitLab
+
+  - unless ldap_group_link.active?
+    (Inactive because syncing with an LDAP user filter is not included in the current license)

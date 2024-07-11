@@ -1,0 +1,71 @@
+#import "~/graphql_shared/fragments/page_info.fragment.graphql"
+
+query getNamespaceStorageStatistics(
+  $fullPath: ID!
+  $searchTerm: String = ""
+  $first: Int
+  $last: Int
+  $after: String
+  $before: String
+  $sortKey: NamespaceProjectSort
+) {
+  namespace(fullPath: $fullPath) {
+    id
+    name
+    storageSizeLimit
+    actualRepositorySizeLimit
+    additionalPurchasedStorageSize
+    totalRepositorySizeExcess
+    totalRepositorySize
+    containsLockedProjects
+    repositorySizeExcessProjectCount
+    rootStorageStatistics {
+      storageSize
+      costFactoredStorageSize
+      repositorySize
+      lfsObjectsSize
+      containerRegistrySize
+      containerRegistrySizeIsEstimated
+      buildArtifactsSize
+      packagesSize
+      wikiSize
+      snippetsSize
+    }
+    projects(
+      includeSubgroups: true
+      notAimedForDeletion: true
+      search: $searchTerm
+      first: $first
+      last: $last
+      after: $after
+      before: $before
+      sort: $sortKey
+    ) {
+      nodes {
+        id
+        fullPath
+        nameWithNamespace
+        avatarUrl
+        webUrl
+        name
+        repositorySizeExcess
+        actualRepositorySizeLimit
+        statistics {
+          commitCount
+          storageSize
+          costFactoredStorageSize
+          repositorySize
+          lfsObjectsSize
+          containerRegistrySize
+          buildArtifactsSize
+          packagesSize
+          wikiSize
+          snippetsSize
+        }
+      }
+      pageInfo {
+        ...PageInfo
+      }
+    }
+  }
+}

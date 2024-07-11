@@ -1,0 +1,154 @@
+{
+  "$schema": "http://json-schema.org/draft-06/schema#",
+  "$ref": "#/definitions/AnalyticsVisualization",
+  "definitions": {
+    "AnalyticsVisualization": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "version": {
+          "const": 1
+        },
+        "type": {
+          "enum": [
+            "LineChart",
+            "ColumnChart",
+            "DataTable",
+            "SingleStat",
+            "DORAChart"
+          ]
+        },
+        "options": {
+          "$ref": "#/definitions/Options"
+        },
+        "data": {
+          "$ref": "#/definitions/Data"
+        }
+      },
+      "required": [
+        "data",
+        "options",
+        "type",
+        "version"
+      ],
+      "title": "AnalyticsVisualization"
+    },
+    "Data": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "enum": [
+            "cube_analytics",
+            "value_stream"
+          ]
+        },
+        "query": {
+          "type": "object"
+        }
+      },
+      "required": [
+        "query",
+        "type"
+      ],
+      "title": "Data"
+    },
+    "Options": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "xAxis": {
+          "$ref": "#/definitions/XAxis"
+        },
+        "yAxis": {
+          "$ref": "#/definitions/YAxis"
+        },
+        "links": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Link"
+          }
+        },
+        "decimalPlaces": {
+          "type": "integer"
+        },
+        "unit": {
+          "type": "string"
+        },
+        "metaText": {
+          "type": "string"
+        },
+        "metaIcon": {
+          "type": "string"
+        },
+        "titleIcon": {
+          "type": "string"
+        }
+      },
+      "title": "Options"
+    },
+    "XAxis": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        },
+        "min": {
+          "type": "integer"
+        },
+        "max": {
+          "type": "integer"
+        }
+      },
+      "required": [
+        "name",
+        "type"
+      ],
+      "title": "XAxis"
+    },
+    "YAxis": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        },
+        "min": {
+          "type": "integer"
+        },
+        "max": {
+          "type": "integer"
+        }
+      },
+      "required": [
+        "name",
+        "type"
+      ],
+      "title": "YAxis"
+    },
+    "Link": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "text": {
+          "type": "string"
+        },
+        "href": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "text",
+        "href"
+      ],
+      "title": "Link"
+    }
+  }
+}

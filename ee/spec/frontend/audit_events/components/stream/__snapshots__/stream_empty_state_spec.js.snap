@@ -1,0 +1,130 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`StreamEmptyState should render correctly 1`] = `
+<section
+  class="gl-display-flex gl-empty-state gl-flex-direction-column gl-mt-5 gl-text-center"
+>
+  <div
+    class="gl-max-w-full"
+  >
+    <img
+      alt=""
+      class="gl-dark-invert-keep-hue gl-max-w-full"
+      height="72"
+      role="img"
+      src="mock/path"
+    />
+  </div>
+  <div
+    class="gl-empty-state-content gl-m-auto gl-mx-auto gl-my-0 gl-p-5"
+    data-testid="gl-empty-state-content"
+  >
+    <h3
+      class="gl-font-size-h-display gl-line-height-36 gl-mt-n3 h4"
+    >
+      Setup streaming for audit events
+    </h3>
+    <p
+      class="gl-mb-0 gl-mt-4"
+    >
+      <p>
+        Add an HTTP endpoint to manage audit logs in third-party systems.
+      </p>
+      <p>
+        This is great for keeping everything one place.
+      </p>
+    </p>
+    <div
+      class="gl-display-flex gl-flex-wrap gl-justify-content-center gl-mt-5"
+    >
+      <div
+        class="gl-disclosure-dropdown gl-new-dropdown"
+        data-testid="dropdown-toggle"
+      >
+        <button
+          aria-controls="reference-1"
+          aria-labelledby="reference-0"
+          class="btn btn-confirm btn-md gl-button gl-new-dropdown-toggle"
+          data-testid="base-dropdown-toggle"
+          id="reference-0"
+          type="button"
+        >
+          <span
+            class="gl-button-text"
+          >
+            <span
+              class="gl-new-dropdown-button-text"
+            >
+              Add streaming destination
+            </span>
+            <svg
+              aria-hidden="true"
+              class="gl-button-icon gl-icon gl-new-dropdown-chevron s16"
+              data-testid="chevron-down-icon"
+              role="img"
+            >
+              <use
+                href="file-mock#chevron-down"
+              />
+            </svg>
+          </span>
+        </button>
+        <div
+          class="gl-new-dropdown-panel gl-w-31!"
+          data-testid="base-dropdown-menu"
+          id="reference-1"
+        >
+          <div
+            class="gl-new-dropdown-inner"
+          >
+            <ul
+              aria-labelledby="reference-0"
+              class="gl-new-dropdown-contents"
+              data-testid="disclosure-content"
+              id="reference-2"
+              tabindex="-1"
+            >
+              <li
+                class="gl-new-dropdown-item"
+                data-testid="disclosure-dropdown-item"
+                tabindex="0"
+              >
+                <button
+                  class="gl-new-dropdown-item-content"
+                  data-testid="add-http-destination"
+                  tabindex="-1"
+                  type="button"
+                >
+                  <span
+                    class="gl-new-dropdown-item-text-wrapper"
+                  >
+                    HTTP endpoint
+                  </span>
+                </button>
+              </li>
+              <li
+                class="gl-new-dropdown-item"
+                data-testid="disclosure-dropdown-item"
+                tabindex="0"
+              >
+                <button
+                  class="gl-new-dropdown-item-content"
+                  data-testid="add-gcp-destination"
+                  tabindex="-1"
+                  type="button"
+                >
+                  <span
+                    class="gl-new-dropdown-item-text-wrapper"
+                  >
+                    Google Cloud Logging
+                  </span>
+                </button>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+`;

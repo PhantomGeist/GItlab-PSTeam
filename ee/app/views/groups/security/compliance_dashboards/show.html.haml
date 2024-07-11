@@ -1,0 +1,15 @@
+- breadcrumb_title _("Compliance center")
+- page_title _("Compliance center")
+
+#js-compliance-report{ data: {
+  can_add_edit: @group.subgroup? ? "false" : "true",
+  violations_csv_export_path: Feature.enabled?(:compliance_violation_csv_export, @group) && group_security_compliance_violation_reports_path(@group, format: :csv),
+  frameworks_csv_export_path: group_security_compliance_framework_reports_path(@group, format: :csv),
+  merge_commits_csv_export_path: group_security_merge_commit_reports_path(@group),
+  group_path: @group.full_path,
+  root_ancestor_path: @group.root_ancestor.full_path,
+  pipeline_configuration_full_path_enabled: can?(current_user, :admin_compliance_pipeline_configuration, @group),
+  base_path: group_security_compliance_dashboard_path(@group),
+  pipeline_configuration_enabled: @group.licensed_feature_available?(:compliance_pipeline_configuration).to_s,
+  adherence_report_ui_enabled: Feature.enabled?(:adherence_report_ui, @group).to_s,
+  compliance_framework_report_ui_enabled: Feature.enabled?(:compliance_framework_report_ui, @group).to_s } }

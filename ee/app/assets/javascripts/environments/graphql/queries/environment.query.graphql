@@ -1,0 +1,19 @@
+query environment($fullPath: ID!, $environmentName: String) {
+  project(fullPath: $fullPath) {
+    id
+    environment(name: $environmentName) {
+      id
+      latestOpenedMostSevereAlert {
+        id
+        title
+        severity
+        detailsUrl
+        startedAt
+        prometheusAlert {
+          id
+          humanizedText
+        }
+      }
+    }
+  }
+}

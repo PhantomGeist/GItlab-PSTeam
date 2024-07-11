@@ -1,0 +1,16 @@
+- breadcrumb_title _("Push Rules")
+- page_title _("Push Rules")
+- add_page_specific_style 'page_bundles/settings'
+
+%section.settings.no-animate#js-push-rule-settings{ class: ('expanded' if expanded_by_default?) }
+  .settings-header
+    %h4.settings-title.js-settings-toggle.js-settings-toggle-trigger-only
+      = _('Push Rules')
+    = render Pajamas::ButtonComponent.new(button_options: { class: 'js-settings-toggle' }) do
+      = expanded_by_default? ? _('Collapse') : _('Expand')
+    %p
+      = _('Rules that define what git pushes are accepted for a project. All newly created projects will use these settings.')
+  .settings-content
+    = render 'push_rules'
+
+= render 'merge_request_approvals'

@@ -1,0 +1,4 @@
+- if project.marked_for_deletion?
+  = gl_badge_tag _('pending deletion'), variant: :warning
+- elsif project.archived
+  = gl_badge_tag _('archived'), variant: :warning

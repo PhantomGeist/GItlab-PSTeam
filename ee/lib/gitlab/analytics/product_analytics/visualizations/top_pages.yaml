@@ -1,0 +1,19 @@
+---
+version: 1
+type: DataTable
+data:
+  type: cube_analytics
+  query:
+    measures:
+      - TrackedEvents.pageViewsCount
+    dimensions:
+      - TrackedEvents.pageUrlpath
+      - TrackedEvents.pageUrl
+    limit: 100
+    timezone: UTC
+    filters: []
+    timeDimensions: []
+options:
+  links:
+    - text: TrackedEvents.pageUrlpath
+      href: TrackedEvents.pageUrl

@@ -1,0 +1,19 @@
+---
+data_category: operational
+key_path: counts.user_preferences_group_overview_security_dashboard
+description: Count of users who set personal preference to see Security Dashboard
+  on Group information page
+product_section: sec
+product_stage: govern
+product_group: threat_insights
+value_type: number
+status: active
+time_frame: all
+data_source: database
+instrumentation_class: CountUserPreferencesGroupOverviewSecurityDashboardMetric
+distribution:
+- ee
+tier:
+- ultimate
+performance_indicator_type: []
+milestone: "<13.9"

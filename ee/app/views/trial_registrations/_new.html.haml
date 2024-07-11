@@ -1,0 +1,29 @@
+- content_for :omniauth_providers_top do
+  = render 'trial_registrations/signup_omniauth_provider_list'
+
+.row.gl-align-items-center
+  .col-lg-6.gl-display-none.gl-lg-display-flex.gl-flex-direction-column.gl-align-items-center.gl-justify-content-start
+    %div
+      = render 'shared/trial_reassurances'
+  .col-md-6.offset-md-3.offset-lg-0
+    %h2.gl-lg-display-none.gl-mb-3.gl-mt-0.gl-text-gray-800
+      = s_('InProductMarketing|Start your 30-day free trial')
+    %p.gl-lg-display-none.gl-font-lg.gl-text-gray-800
+      = s_('InProductMarketing|No credit card required')
+
+    .signup-page
+      = render 'devise/shared/signup_box',
+        borderless: true,
+        url: trial_registrations_path(glm_tracking_params),
+        button_text: _('Continue'),
+        show_omniauth_providers: social_signin_enabled?
+
+      = render 'devise/shared/sign_in_link'
+
+      %p.gl-text-center
+        = s_('InProductMarketing|Want to host GitLab on your servers?')
+        = link_to s_('InProductMarketing|Start a Self-Managed trial'),
+          'https://about.gitlab.com/free-trial/#selfmanaged/',
+          data: { track_action: 'click_link', track_label: 'start_self-managed_trial' }
+
+  = render 'devise/shared/minimal_footer'

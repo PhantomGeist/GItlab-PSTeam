@@ -1,0 +1,8 @@
+query autoFixMrsCount($fullPath: ID!) {
+  project(fullPath: $fullPath) {
+    id
+    mergeRequests(labels: "GitLab-auto-fix", state: opened) {
+      count
+    }
+  }
+}

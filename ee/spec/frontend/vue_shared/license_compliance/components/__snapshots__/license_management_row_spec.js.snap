@@ -1,0 +1,41 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`LicenseManagementRow allowed license renders the allowed status text with the status icon 1`] = `
+<div
+  class="align-items-center d-flex justify-content-end justify-content-md-start status table-mobile-content text-capitalize"
+>
+  <issue-status-icon-stub
+    status="success"
+    statusiconsize="24"
+  />
+  Allowed
+</div>
+`;
+
+exports[`LicenseManagementRow allowed license renders the license name 1`] = `
+<div
+  class="name table-mobile-content"
+>
+  MIT
+</div>
+`;
+
+exports[`LicenseManagementRow denied license renders the denied status text with the status icon 1`] = `
+<div
+  class="align-items-center d-flex justify-content-end justify-content-md-start status table-mobile-content text-capitalize"
+>
+  <issue-status-icon-stub
+    status="failed"
+    statusiconsize="24"
+  />
+  Denied
+</div>
+`;
+
+exports[`LicenseManagementRow denied license renders the license name 1`] = `
+<div
+  class="name table-mobile-content"
+>
+  New BSD
+</div>
+`;

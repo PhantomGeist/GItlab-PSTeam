@@ -1,0 +1,35 @@
+- page_title _('Start a Free Ultimate Trial')
+- content_for :page_specific_javascripts do
+  = render 'layouts/google_tag_manager_head'
+  = render 'layouts/one_trust'
+= render 'layouts/google_tag_manager_body'
+
+.row
+  .col-md-6.m-sm-6
+    %h2.gl-pb-5.gl-my-0
+      = _('Almost there')
+
+    %p.gl-text-gray-700.gl-font-lg
+      = trial_selection_intro_text
+
+    = yield :before_form
+
+    = form_tag trials_path(**glm_params, step: GitlabSubscriptions::Trials::CreateService::TRIAL), method: :post, class: 'js-saas-trial-group', data: { testid: 'trial-form' } do
+      .js-namespace-selector{ data: namespace_selector_data(local_assigns[:namespace_create_errors]) }
+      - if should_ask_company_question?
+        .form-group
+          = label_tag :trial_entity, _('Who will be using GitLab?')
+          .gl-form-checkbox-group
+            .gl-form-checkbox.form-check.form-check-inline
+              = radio_button_tag :trial_entity, :company, params[:trial_entity]=='company', required: true,
+                class: 'form-check-input', data: { testid: 'trial-company' }
+              = label_tag :trial_entity_company, _('My company or team'), class: 'form-check-label'
+            .gl-form-checkbox.form-check.form-check-inline
+              = radio_button_tag :trial_entity, :individual, params[:trial_entity]=='individual', required: true,
+                class: 'form-check-input', data: { testid: 'trial-individual' }
+              = label_tag :trial_entity_individual, _('Just me'), class: 'form-check-label'
+      = render Pajamas::ButtonComponent.new(type: :submit, variant: :confirm, button_options: {data: { testid: 'start-your-free-trial' }}) do
+        = _('Start your free trial')
+
+  .col-md-4.gl-mt-9
+    = image_tag 'illustrations/saas-trial-illustration.svg', alt: '', class: 'd-none d-md-inline gl-w-full'
